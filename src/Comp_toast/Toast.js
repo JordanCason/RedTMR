@@ -1,8 +1,22 @@
 import { notification, Modal } from 'antd';
-import ethicon from '../img/Ethereum_logo.svg'
-import ipfsicon from '../img/ipfs.png'
+//import getImage from '../img/assets.js'
 import React from 'react';
 import './index.css'
+import EthImg from '../img/EthImg.png'
+import ethlogo from '../img/Ethereum_logo.svg'
+
+import ipfslogo2 from '../img/ipfs-logo.svg'
+import logoipfs from '../img/Ipfs.png'
+
+//window.location.origin + '/img/myImage.png'
+
+// console.log("AAAAAAAAAAAAAAA")
+ console.log(EthImg)
+ console.log(ethlogo)
+ console.log(ipfslogo2)
+  console.log(logoipfs)
+var ethlogo2 = ethlogo.slice(1);
+var ipfslogo22 = ipfslogo2.slice(1);
 
 export const depositEthToast = (hash) => {
   notification['info']({
@@ -10,7 +24,7 @@ export const depositEthToast = (hash) => {
     description: `Receipt: ${hash}`,
     placement: "bottom",
     duration: 5,
-    icon: <img src={ethicon} onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
+    icon: <img src="http://159.65.232.230/ipns/QmRnw4LMRat6UAqsQwftuJkh3Wrbdc9hpQBaWYPfFu4oL8/img/Ethereum_logo.svg" onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
     style: {
       width: 650,
       marginLeft: -250,
@@ -26,7 +40,7 @@ export const ipfsHashToast = (hash) => {
     description: `    Hash: ${hash}`,
     placement: "bottom",
     duration: 5,
-    icon: <img src={ipfsicon} onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
+    icon: <img src='http://159.65.232.230/ipns/QmRnw4LMRat6UAqsQwftuJkh3Wrbdc9hpQBaWYPfFu4oL8/img/ipfs-logo.svg' onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
     textIndent: 7,
     style: {
       width: 550,
@@ -48,7 +62,7 @@ export const transactionReceiptToast = (receipt, depositValue) => {
         `,
     placement: "bottom",
     duration: 5,
-    icon: <img src={ethicon} onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
+    icon: <img src="http://159.65.232.230/ipns/QmRnw4LMRat6UAqsQwftuJkh3Wrbdc9hpQBaWYPfFu4oL8/img/Ethereum_logo.svg" onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
     style: {
       width: 650,
       marginLeft: -250,
@@ -64,7 +78,7 @@ export const transactionHashToast = (hash) => {
     description: `Tx Hash: ${hash}`,
     placement: "bottom",
     duration: 5,
-    icon: <img src={ethicon} onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
+    icon: <img src="http://159.65.232.230/ipns/QmRnw4LMRat6UAqsQwftuJkh3Wrbdc9hpQBaWYPfFu4oL8/img/Ethereum_logo.svg" onClick={()=> console.log("some acton in toast.js")} align="left" height="52" width="52"/>,
     style: {
       width: 650,
       marginLeft: -250,
