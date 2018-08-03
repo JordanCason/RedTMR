@@ -11,10 +11,10 @@ import logoipfs from '../img/Ipfs.png'
 //window.location.origin + '/img/myImage.png'
 
 // console.log("AAAAAAAAAAAAAAA")
- console.log(EthImg)
- console.log(ethlogo)
- console.log(ipfslogo2)
-  console.log(logoipfs)
+// console.log(EthImg)
+// console.log(ethlogo)
+// console.log(ipfslogo2)
+ // console.log(logoipfs)
 var ethlogo2 = ethlogo.slice(1);
 var ipfslogo22 = ipfslogo2.slice(1);
 

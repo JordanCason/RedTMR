@@ -16,8 +16,8 @@ export function bountysListAction() {
         payload: new Promise((resolve, reject) => {
             myContract.methods.getContractCount().call().then(function(contracts) {
                 contracts = parseInt(contracts, 10); // the radix is 10 (decimal)
-                console.log('bountyList')
-                console.log(contracts)
+                //console.log('bountyList')
+                //console.log(contracts)
                 var contractDict = {};
                 for (let i = 0; i < contracts; i++) {
                     myContract.methods.bountyArray(i).call().then(bountyContractAddress => {

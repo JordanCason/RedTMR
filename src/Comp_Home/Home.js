@@ -27,9 +27,7 @@ class Home extends Component {
         const { bountysList } = this.props.bountysList
     const createNewState = []
         Object.keys(bountysList).forEach((item, i) => {
-            console.log('here')
             let test = `${bountysList[item].comName}${bountysList[item].comAbout}`
-            console.log(test)
             if (test.toLowerCase().includes(e.target.value.toLowerCase())) { // may want you use a fuzzy search
                 createNewState.push(item)
             }
@@ -39,7 +37,7 @@ class Home extends Component {
 
 
     render = () => {
-        console.log('render')
+        //console.log('render')
         if (!this.state) {
             return(<div>render</div>)
         } else {
@@ -83,7 +81,7 @@ class Home extends Component {
                                             <table className={"table"} id="bountyRow" >
                                                 <tbody className={"sethover"} >
                                                     <tr>
-                                                        <td className={"tableRow"} id={console.log(bountysList[key])}>
+                                                        <td className={"tableRow"} id={bountysList[key]}>
                                                             <img src={bountysList[key].uploadImg} alt='' />
                                                             <div>
                                                             <p>{bountysList[key].comName}</p>

@@ -106,12 +106,6 @@ class CreateBountyForm extends Component {
 
     }
 
-
-
-
-
-
-
   render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -137,8 +131,6 @@ class CreateBountyForm extends Component {
         },
       },
     };
-
-
 
 
     return (

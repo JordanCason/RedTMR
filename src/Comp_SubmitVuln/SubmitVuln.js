@@ -6,11 +6,48 @@ import { connect } from 'react-redux';
 // ethereum
 import {myContract, web3, bountyabi} from '../Comp_web3/abi.js';
 
+// antd
+import { Form, Input, Select, Row, Col, Button, InputNumber } from 'antd';
+
+
 // other
 import styled from 'styled-components';
 import CVSSScore from '../Comp_CVSS/CVSSScore'
 import Markdown from '../Comp_Markdown/Markdown';
-import SearchTable from './Comp_searchTable/SearchTable'
+import SearchTable from './Comp_searchTable2/SearchTable'
+
+const FormItem = Form.Item;
+
+const weaknessValues = {
+    header: "Weakness",
+    placeholder: "Search..."
+}
+
+const attackValues = {
+    header: "Attack surface",
+    placeholder: "Search..."
+}
+
+const weaknessData = [
+    {key: '1', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
+    {key: '2', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+    {key: '3', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+    {key: '4', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
+    {key: '5', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+    {key: '6', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+    {key: '7', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
+    {key: '8', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+    {key: '9', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+    {key: '10', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
+    {key: '11', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+    {key: '12', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+    {key: '13', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
+    {key: '14', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+    {key: '15', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+    {key: '16', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
+    {key: '17', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+    {key: '18', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+]
 
 
 class SubmitVuln extends Component {
@@ -18,7 +55,26 @@ class SubmitVuln extends Component {
         super(props)
     }
 
+    handleSubmit = (e) => {
+
+
+    }
+
     render = () => {
+
+        const tailFormItemLayout = {
+          wrapperCol: {
+            xs: {
+              span: 24,
+              offset: 0,
+            },
+            sm: {
+              span: 16,
+              offset: 0,
+            },
+          },
+        };
+
         return (
                 <SubmitVulnStyle>
                     <div className="container-2">
@@ -37,12 +93,14 @@ class SubmitVuln extends Component {
                                     <div>
                                         <br/><br/>
                                         <p>Select The attack surface of the Vulnerability</p>
-                                        <SearchTable/>
+                                        <SearchTable Values={attackValues} data={weaknessData}/>
                                     </div>
 
                                     <div>
+
                                         <p>Select a Weakness, One the you think best describes the vulnerability.</p>
-                                        <SearchTable/>
+                                        <SearchTable Values={weaknessValues} data={weaknessData}/>
+
                                     </div>
 
                                     <div id="test">
@@ -54,6 +112,12 @@ class SubmitVuln extends Component {
                                         <h1 id="mainTitle">Calculate Common Vulnerability Score</h1>
                                         <CVSSScore/>
                                     </div>
+                                    <Form onSubmit={this.handleSubmit}>
+                                    <FormItem {...tailFormItemLayout}>
+                                        <Button type="primary" htmlType="submit">Submit</Button>
+                                    </FormItem>
+                                    </Form>
+
 
                                     <div className="directoryFooter"></div>
 
