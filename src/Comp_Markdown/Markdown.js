@@ -6,15 +6,11 @@ import ReactMarkdown from 'react-markdown';
 
 //redux
 import { connect } from 'react-redux';
-import {markdownAction} from '../redux_actions/action_markdown'
+import {markdownAction, markdownInitAction} from '../redux_actions/action_markdown'
 
 // other
 import styled from 'styled-components';
 import * as Showdown from "showdown";
-
-
-
-
 
 
 //https://github.com/showdownjs/showdown/wiki/Showdown's-Markdown-syntax
@@ -22,6 +18,7 @@ import * as Showdown from "showdown";
 class MarkDown extends Component {
     constructor(props) {
         super(props);
+        props.markdownInitAction(this.props.reduxStoreValue, this.props.data)
         this.state = {
           code: "markdown-textbox-active",
           preview: "markdown-textbox-none",
@@ -85,7 +82,8 @@ const mapStateToProps = state => ({
 });
 
 const mapActionsToProps = {
-    markdownAction
+    markdownAction,
+    markdownInitAction
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(MarkDown);
