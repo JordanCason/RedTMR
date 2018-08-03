@@ -19,13 +19,19 @@ import SearchTable from './Comp_searchTable2/SearchTable'
 const FormItem = Form.Item;
 
 const weaknessValues = {
+    reduxTableName: "Weakness",
     header: "Weakness",
-    placeholder: "Search..."
+    placeholder: "Search...",
+    width: "600px",
+    height: "300px",
 }
 
 const attackValues = {
+    reduxTableName: "Attack",
     header: "Attack surface",
-    placeholder: "Search..."
+    placeholder: "Search...",
+    width: "700px",
+    height: "400px",
 }
 
 const weaknessData = [

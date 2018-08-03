@@ -24,6 +24,7 @@ import { contractTransactionsReducer as contractTransactions } from './redux_red
 import { calculateCVSSReducer as CVSSData} from './redux_reducers/reducer_calculateCVSS'
 import { markdownReducer as markdown} from './redux_reducers/reducer_markdown'
 import { profilePictureReducer as profilePicture } from './redux_reducers/reducer_profilePicture'
+import { tableClickReducer as tableClick } from './redux_reducers/reducer_tableClick'
 //import { AddressReducer as ethereumAddress } from './redux_reducers/reducer_walletAddress'
 
 
@@ -38,7 +39,8 @@ const rootReducers = combineReducers({
     contractTransactions,
     CVSSData,
     markdown,
-    profilePicture
+    profilePicture,
+    tableClick
 });
 
 const store = createStore(
