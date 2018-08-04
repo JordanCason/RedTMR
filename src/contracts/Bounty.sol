@@ -50,8 +50,8 @@ contract Bounty{
 
     function submitVuln(bytes4 CCVE, bytes ipfsSubmission) public {
         // sender can only submit one vulnerablity at a time
-        require(test() == false);
-        require(msg.sender != owner); //@info owner cant submit bounty to themselfs
+        //require(test() == false);
+        //require(msg.sender != owner); //@info owner cant submit bounty to themselfs
         require(lock == false);
         mappingAddressToStruct[msg.sender].submitter        = msg.sender;
         mappingAddressToStruct[msg.sender].stage            = submit;
@@ -67,13 +67,15 @@ contract Bounty{
         // continue to payout
     }
 
-    function test() public view returns(bool) {
-        if (mappingAddressToStruct[msg.sender].submitter == msg.sender) {
-            return(true);
-        } else {
-            return(false);
-        }
-    }
+
+    //@DEV impliment when i have more wallet addresses to test with
+    //function test() public view returns(bool) {
+    //    if (mappingAddressToStruct[msg.sender].submitter == msg.sender) {
+    //        return(true);
+    //    } else {
+    //        return(false);
+    //    }
+    //}
 
 
 
@@ -104,5 +106,5 @@ contract Bounty{
     }
 
 }
-
 //submitVuln // "0x382E36","0x516D546643656A676F32775477716E444A73384C753170434E65437243447545344741776B6E6139337A64643764"
+            //  "0x362e32","0x516d516673524761484c685858646233534336566579476d7a37457a666b6255733467747a444474463148743150"

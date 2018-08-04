@@ -4,8 +4,6 @@ import { Redirect, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
-// ethereum
-import {myContract, web3, bountyabi} from '../Comp_web3/abi.js';
 
 // other
 import 'purecss';

@@ -19,6 +19,7 @@ import styled from 'styled-components';
 import CVSSScore from '../Comp_CVSS/CVSSScore'
 import Markdown from '../Comp_Markdown/Markdown';
 import SearchTable from './Comp_searchTable2/SearchTable'
+import '../func/hex.js'
 
 const FormItem = Form.Item;
 
@@ -107,7 +108,6 @@ this is a link to [google][]
 [google]: http://www.google.com
 
 
-
 `;
 
 
@@ -118,6 +118,8 @@ class SubmitVuln extends Component {
     }
 
     handleSubmit = (e) => {
+
+
         const vulnData = {
             attackSurface: this.props.tableClick.Attack,
             weakness: this.props.tableClick.Weakness,
@@ -125,31 +127,53 @@ class SubmitVuln extends Component {
             CVSSData: this.props.CVSSData,
         }
 
-
-    console.log(vulnData)
-    ipfs.addJSON(vulnData, (err, result) => {
-        console.log(result)
-        ipfsHashToast(result)
-        ipfs.catJSON(result, (err, ipfsresult) => {
-            console.log(ipfsresult)
-        })
-        });
-
-        // myContract.methods.createBounty(result).send({from: walletAddress, gas: 3000000, value: web3.utils.toWei(initDeposit, 'ether')})
-        // .on('transactionHash', function(hash){
-        //     depositEthToast(hash)
-        // })
-        //  .on('receipt', (receipt) => {
-        //     let bountyContractAddress = receipt.events.returnBounty.returnValues[0];
-        //     let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
-        //     bountyContract.methods.ownerInfo().call().then(function(result) {
-        //         console.log(`contract info: `, result)
-        //     });
-        // });
-        //
+        const transaction = {
+            from: this.props.ethereumWallet.walletAddress,
+            gas: 4000000,
+            }
 
 
-    }
+        console.log(vulnData)
+        ipfs.addJSON(vulnData, (err, result) => {
+            ipfsHashToast(result)
+            const bountycontract = new web3.eth.Contract(bountyabi, this.props.bountyCurrent.bountyCurrent.address);
+            console.log(bountycontract)
+            console.log(vulnData.CVSSData.environmental.score.hexEncode())
+            console.log(web3.utils.toHex(result))
+
+
+            bountycontract.methods.submitVuln(vulnData.CVSSData.environmental.score.hexEncode(), web3.utils.toHex(result)).send(transaction)
+            .on('transactionHash', function(hash){
+                console.log(hash)
+            })
+            .on('receipt', function(receipt){
+                console.log(receipt)
+            })
+
+
+
+
+
+            ipfs.catJSON(result, (err, ipfsresult) => {
+                console.log(ipfsresult)
+            })
+           });
+
+            // myContract.methods.createBounty(result).send({from: walletAddress, gas: 3000000, value: web3.utils.toWei(initDeposit, 'ether')})
+            // .on('transactionHash', function(hash){
+            //     depositEthToast(hash)
+            // })
+            //  .on('receipt', (receipt) => {
+            //     let bountyContractAddress = receipt.events.returnBounty.returnValues[0];
+            //     let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
+            //     bountyContract.methods.ownerInfo().call().then(function(result) {
+            //         console.log(`contract info: `, result)
+            //     });
+            // });
+            //
+
+
+        }
 
     render = () => {
 
@@ -229,6 +253,8 @@ const mapStateToProps = state => ({
     tableClick: state.tableClick,
     markdown: state.markdown,
     CVSSData: state.CVSSData,
+    bountyCurrent: state.bountyCurrent,
+    ethereumWallet: state.ethereumWallet,
 });
 
 const mapActionsToProps = {
