@@ -6,8 +6,12 @@ import { connect } from 'react-redux';
 // ethereum
 import {myContract, web3, bountyabi} from '../Comp_web3/abi.js';
 
+//Ipfs
+import {upload, loadimg, ipfs, ipfsHost} from '../Comp_IPFS/Ipfs';
+import {ipfsHashToast, depositEthToast} from '../Comp_toast/Toast'
+
 // antd
-import { Form, Input, Select, Row, Col, Button, InputNumber } from 'antd';
+import { Form, Button } from 'antd';
 
 
 // other
@@ -114,6 +118,35 @@ class SubmitVuln extends Component {
     }
 
     handleSubmit = (e) => {
+        const vulnData = {
+            attackSurface: this.props.tableClick.Attack,
+            weakness: this.props.tableClick.Weakness,
+            ReportDetails: this.props.markdown.submitVuln,
+            CVSSData: this.props.CVSSData,
+        }
+
+
+    console.log(vulnData)
+    ipfs.addJSON(vulnData, (err, result) => {
+        console.log(result)
+        ipfsHashToast(result)
+        ipfs.catJSON(result, (err, ipfsresult) => {
+            console.log(ipfsresult)
+        })
+        });
+
+        // myContract.methods.createBounty(result).send({from: walletAddress, gas: 3000000, value: web3.utils.toWei(initDeposit, 'ether')})
+        // .on('transactionHash', function(hash){
+        //     depositEthToast(hash)
+        // })
+        //  .on('receipt', (receipt) => {
+        //     let bountyContractAddress = receipt.events.returnBounty.returnValues[0];
+        //     let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
+        //     bountyContract.methods.ownerInfo().call().then(function(result) {
+        //         console.log(`contract info: `, result)
+        //     });
+        // });
+        //
 
 
     }
@@ -170,9 +203,9 @@ class SubmitVuln extends Component {
                                         <h1 id="mainTitle">Calculate Common Vulnerability Score</h1>
                                         <CVSSScore/>
                                     </div>
-                                    <Form onSubmit={this.handleSubmit}>
+                                    <Form>
                                     <FormItem {...tailFormItemLayout}>
-                                        <Button type="primary" htmlType="submit">Submit</Button>
+                                        <Button onClick={this.handleSubmit} type="primary" htmlType="button">Submit</Button>
                                     </FormItem>
                                     </Form>
 
@@ -193,7 +226,9 @@ class SubmitVuln extends Component {
 
 
 const mapStateToProps = state => ({
-
+    tableClick: state.tableClick,
+    markdown: state.markdown,
+    CVSSData: state.CVSSData,
 });
 
 const mapActionsToProps = {
