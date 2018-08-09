@@ -19,7 +19,7 @@ BountyAbi = [ { constant: false,
   { constant: true,
     inputs: [],
     name: 'ownerInfo',
-    outputs: 
+    outputs:
      [ { name: '', type: 'uint256' },
        { name: '', type: 'address' },
        { name: '', type: 'string' } ],
@@ -29,7 +29,7 @@ BountyAbi = [ { constant: false,
   { constant: true,
     inputs: [ { name: '', type: 'address' } ],
     name: 'mappingAddressToStruct',
-    outputs: 
+    outputs:
      [ { name: 'index', type: 'uint256' },
        { name: 'submitter', type: 'address' },
        { name: 'stage', type: 'bytes1' },
@@ -54,7 +54,7 @@ BountyAbi = [ { constant: false,
     stateMutability: 'view',
     type: 'function' },
   { constant: false,
-    inputs: 
+    inputs:
      [ { name: 'CCVE', type: 'bytes4' },
        { name: 'ipfsSubmission', type: 'bytes' } ],
     name: 'submitVuln',
@@ -76,7 +76,7 @@ BountyAbi = [ { constant: false,
     payable: true,
     stateMutability: 'payable',
     type: 'function' },
-  { inputs: 
+  { inputs:
      [ { name: '_index', type: 'uint256' },
        { name: '_sender', type: 'address' },
        { name: '_ipfs', type: 'string' } ],

@@ -92,7 +92,7 @@ class CreateBounty extends Component {
                             <div id='bodyHeader'>
             					<a>SmartContract Bounty Creation Form</a>
             				</div>
-                                
+
                                 <CreateBountyForm/>
                         </div>
                     </div>

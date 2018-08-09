@@ -7,6 +7,9 @@ var path = require('path');
 
 //only compile thease contracts
 // key is the source contract dict is all the imports
+//
+
+console.log("Starting")
 const web3 = new Web3(); web3.setProvider(new Web3.providers.HttpProvider('http://159.65.232.230:57890'));
 web3.eth.accounts.privateKeyToAccount(fs.readFileSync('./testingkeys.js').toString())
 

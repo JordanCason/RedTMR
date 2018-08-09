@@ -1,7 +1,7 @@
 
 export let BountyFactoryAddress;
 export let BountyFactoryAbi;
-BountyFactoryAddress = "0xFf28591F7E63faE425C90E5a7Eed5213f6ce3cF2"
+BountyFactoryAddress = "0xE50931D71eeC7fc6c612Ba78d1126aB2B9F9FAA2"
 BountyFactoryAbi = [ { constant: false,
     inputs: [ { name: 'ipfs', type: 'string' } ],
     name: 'createBounty',
@@ -51,5 +51,6 @@ BountyFactoryAbi = [ { constant: false,
     inputs: [ { indexed: false, name: '', type: 'address' } ],
     name: 'returnBounty',
     type: 'event',
-    signature: '0x8054e2cb87f5198e83eb21b311baa03e75b155b365725dc25a38b77677ccdabf' } ]
+    signature:
+     '0x8054e2cb87f5198e83eb21b311baa03e75b155b365725dc25a38b77677ccdabf' } ]
     

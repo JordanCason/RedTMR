@@ -118,30 +118,20 @@ class SubmitVuln extends Component {
     }
 
     handleSubmit = (e) => {
-
-
         const vulnData = {
             attackSurface: this.props.tableClick.Attack,
             weakness: this.props.tableClick.Weakness,
             ReportDetails: this.props.markdown.submitVuln,
             CVSSData: this.props.CVSSData,
         }
-
         const transaction = {
             from: this.props.ethereumWallet.walletAddress,
             gas: 4000000,
             }
-
-
-        console.log(vulnData)
+        //@DEV (submit Vulnerability) add data to ipfs and push cve score and ipfs hash to blockchain
         ipfs.addJSON(vulnData, (err, result) => {
             ipfsHashToast(result)
             const bountycontract = new web3.eth.Contract(bountyabi, this.props.bountyCurrent.bountyCurrent.address);
-            console.log(bountycontract)
-            console.log(vulnData.CVSSData.environmental.score.hexEncode())
-            console.log(web3.utils.toHex(result))
-
-
             bountycontract.methods.submitVuln(vulnData.CVSSData.environmental.score.hexEncode(), web3.utils.toHex(result)).send(transaction)
             .on('transactionHash', function(hash){
                 console.log(hash)
@@ -149,31 +139,12 @@ class SubmitVuln extends Component {
             .on('receipt', function(receipt){
                 console.log(receipt)
             })
-
-
-
-
-
             ipfs.catJSON(result, (err, ipfsresult) => {
                 console.log(ipfsresult)
             })
            });
-
-            // myContract.methods.createBounty(result).send({from: walletAddress, gas: 3000000, value: web3.utils.toWei(initDeposit, 'ether')})
-            // .on('transactionHash', function(hash){
-            //     depositEthToast(hash)
-            // })
-            //  .on('receipt', (receipt) => {
-            //     let bountyContractAddress = receipt.events.returnBounty.returnValues[0];
-            //     let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
-            //     bountyContract.methods.ownerInfo().call().then(function(result) {
-            //         console.log(`contract info: `, result)
-            //     });
-            // });
-            //
-
-
         }
+        //@DEV END
 
     render = () => {
 
