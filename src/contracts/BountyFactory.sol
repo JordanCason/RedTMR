@@ -10,11 +10,11 @@ contract BountyFactory {
     address[] public bountyArray;
 
     constructor() public {
-    owner = msg.sender;
+        owner = msg.sender;
     }
 
     function createBounty(string ipfs) public payable returns(address) {
-        require(msg.value == 0.01 ether);
+        require(msg.value == 0.01 ether, "Fucntion Requires 0.01ETH");
         Bounty newbounty = (new Bounty).value(msg.value)(bountyArray.length, msg.sender, ipfs);
         bountyArray.push(newbounty);
         emit returnBounty(newbounty);

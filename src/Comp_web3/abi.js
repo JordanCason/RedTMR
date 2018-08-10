@@ -1,18 +1,18 @@
 import {BountyFactoryAbi, BountyFactoryAddress} from '../contracts/abi/BountyFactoryAbi'
 import {BountyAbi} from '../contracts/abi/BountyAbi'
-console.log("booting")
+console.log('booting')
 console.log(window)
-var Web3 = require('web3');
+var Web3 = require('web3')
 
-export var myContract;
-export var bountyabi;
-export var web3;
+export var myContract
+export var bountyabi
+export var web3
 
 if (window.web3) {
-    console.log("found Web3")
-    //web3 = window.web3
-    window.web3 = new Web3(window.web3.currentProvider);
-    //web3 = new Web3(window.web3.currentProvider);
+    console.log('found Web3')
+    // web3 = window.web3
+    window.web3 = new Web3(window.web3.currentProvider)
+    // web3 = new Web3(window.web3.currentProvider);
     web3 = window.web3
 }
 
@@ -23,23 +23,18 @@ if (window.web3) {
 //     web3 = new web3(web3.correntProvider);
 // } else {
 //     console.log('using web3 provider')
-//     //web3 = new Web3(); web3.setProvider(new Web3.providers.HttpProvider('http://159.65.232.230:7545'));
-//     //web3 = new Web3(); web3.setProvider(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
+//     web3 = new Web3(); web3.setProvider(new Web3.providers.HttpProvider('http://159.65.232.230:7545'));
+//     web3 = new Web3(); web3.setProvider(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
 //     web3 = new Web3(); web3.setProvider(new Web3.providers.HttpProvider('http://159.65.232.230:57890'));
 // }
 
+myContract = new web3.eth.Contract(BountyFactoryAbi, BountyFactoryAddress)
+bountyabi = BountyAbi
 
-myContract = new web3.eth.Contract(BountyFactoryAbi, BountyFactoryAddress);
-bountyabi = BountyAbi;
-
-
-
-
-// myContract = new web3.eth.Contract(BountyFactoryAbi, BountyFactoryAddress, { //@dev contract address
-// from: web3.eth.defaultAccount, // default from address
-// gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
+// myContract = new web3.eth.Contract(BountyFactoryAbi, BountyFactoryAddress, { @dev contract address
+// from: web3.eth.defaultAccount,  default from address
+// gasPrice: '20000000000'  default gas price in wei, 20 gwei in this case
 // });
-
 
 // [
 // {

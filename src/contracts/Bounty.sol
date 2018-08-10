@@ -34,12 +34,12 @@ contract Bounty{
     }
 
     modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
+        require(msg.sender == owner, "You are not the owner");
+        _;
     }
 
     function deposit() public payable {
-        require(msg.value > 0);
+        require(msg.value > 0, "Value needs to be grater than 0");
     }
 
     function withdraw(uint amount) public onlyOwner {
@@ -52,17 +52,17 @@ contract Bounty{
         // sender can only submit one vulnerablity at a time
         //require(test() == false);
         //require(msg.sender != owner); //@info owner cant submit bounty to themselfs
-        require(lock == false);
-        mappingAddressToStruct[msg.sender].submitter        = msg.sender;
-        mappingAddressToStruct[msg.sender].stage            = submit;
-        mappingAddressToStruct[msg.sender].CCVE             = CCVE;
-        mappingAddressToStruct[msg.sender].ipfsSubmission   = ipfsSubmission;
-        mappingAddressToStruct[msg.sender].index            = SubmissionArray.push(msg.sender)-1; //push msg.sender to the list and add the index to the struct at same time
+        require(lock == false, "require lock == false error");
+        mappingAddressToStruct[msg.sender].submitter = msg.sender;
+        mappingAddressToStruct[msg.sender].stage = submit;
+        mappingAddressToStruct[msg.sender].CCVE = CCVE;
+        mappingAddressToStruct[msg.sender].ipfsSubmission = ipfsSubmission;
+        mappingAddressToStruct[msg.sender].index = SubmissionArray.push(msg.sender)-1;
     }
 
     function acceptVuln(address submitter) public {
-        require(msg.sender == owner);
-        require(mappingAddressToStruct[msg.sender].stage != accept);
+        require(msg.sender == owner, "You are not the owner");
+        require(mappingAddressToStruct[msg.sender].stage != accept, "You are not the owner");
         mappingAddressToStruct[submitter].stage = accept;
         // continue to payout
     }
@@ -92,7 +92,7 @@ contract Bounty{
 
     //@debug
     function arraylength() public view returns(uint) {
-        return(SubmissionArray.length -1) ;
+        return(SubmissionArray.length - 1) ;
     }
 
     //@debug
