@@ -1,42 +1,44 @@
 // react
+/* eslint react/prop-types: "off" */
+/* eslint handle-callback-err: "off" */
+// eslint-disable-next-line
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-//import { Input  } from 'antd';
+import { connect } from 'react-redux'
+// import { Input  } from 'antd';
 
 // ethereum
-import {myContract, web3, bountyabi} from '../Comp_web3/abi.js';
+import {web3, bountyabi} from '../Comp_web3/abi.js'
 
-//Ipfs
-import {upload, loadimg, ipfs, ipfsHost} from '../Comp_IPFS/Ipfs';
-import {ipfsHashToast, depositEthToast} from '../Comp_toast/Toast'
+// Ipfs
+import {ipfs} from '../Comp_IPFS/Ipfs'
+import {ipfsHashToast} from '../Comp_toast/Toast'
 
 // antd
-import { Form, Button } from 'antd';
-
+import { Form, Button } from 'antd'
 
 // other
-import styled from 'styled-components';
+import styled from 'styled-components'
 import CVSSScore from '../Comp_CVSS/CVSSScore'
-import Markdown from '../Comp_Markdown/Markdown';
+import Markdown from '../Comp_Markdown/Markdown'
 import SearchTable from './Comp_searchTable2/SearchTable'
 import '../func/hex.js'
 
-const FormItem = Form.Item;
+const FormItem = Form.Item
 
 const weaknessValues = {
-    reduxTableName: "Weakness",
-    header: "Weakness",
-    placeholder: "Search...",
-    width: "600px",
-    height: "300px",
+    reduxTableName: 'Weakness',
+    header: 'Weakness',
+    placeholder: 'Search...',
+    width: '600px',
+    height: '300px'
 }
 
 const attackValues = {
-    reduxTableName: "Attack",
-    header: "Attack surface",
-    placeholder: "Search...",
-    width: "700px",
-    height: "400px",
+    reduxTableName: 'Attack',
+    header: 'Attack surface',
+    placeholder: 'Search...',
+    width: '700px',
+    height: '400px'
 }
 
 const weaknessData = [
@@ -57,7 +59,7 @@ const weaknessData = [
     {key: '15', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
     {key: '16', weakness: 'ClearText Storage of Sensitive Information', CWE: 'CWE-312'},
     {key: '17', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
-    {key: '18', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'},
+    {key: '18', weakness: 'Cross-site Scripting (XSS) - Generic', CWE: 'CWE-79'}
 ]
 
 const markdownInitSubmitVuln = `
@@ -108,134 +110,120 @@ this is a link to [google][]
 [google]: http://www.google.com
 
 
-`;
-
-
+`
 
 class SubmitVuln extends Component {
-    constructor(props) {
-        super(props)
-    }
-
     handleSubmit = (e) => {
         const vulnData = {
             attackSurface: this.props.tableClick.Attack,
             weakness: this.props.tableClick.Weakness,
             ReportDetails: this.props.markdown.submitVuln,
-            CVSSData: this.props.CVSSData,
+            CVSSData: this.props.CVSSData
         }
         const transaction = {
             from: this.props.ethereumWallet.walletAddress,
-            gas: 4000000,
-            }
-        //@DEV (submit Vulnerability) add data to ipfs and push cve score and ipfs hash to blockchain
+            gas: 4000000
+        }
+        // @DEV (submit Vulnerability) add data to ipfs and push cve score and ipfs hash to blockchain
         ipfs.addJSON(vulnData, (err, result) => {
             ipfsHashToast(result)
-            const bountycontract = new web3.eth.Contract(bountyabi, this.props.bountyCurrent.bountyCurrent.address);
+            const bountycontract = new web3.eth.Contract(bountyabi, this.props.bountyCurrent.bountyCurrent.address)
             bountycontract.methods.submitVuln(vulnData.CVSSData.environmental.score.hexEncode(), web3.utils.toHex(result)).send(transaction)
-            .on('transactionHash', function(hash){
-                console.log(hash)
-            })
-            .on('receipt', function(receipt){
-                console.log(receipt)
-            })
+                .on('transactionHash', function (hash) {
+                    console.log(hash)
+                })
+                .on('receipt', function (receipt) {
+                    console.log(receipt)
+                })
             ipfs.catJSON(result, (err, ipfsresult) => {
                 console.log(ipfsresult)
             })
-           });
-        }
-        //@DEV END
+        })
+    }
+    // @DEVEND
 
     render = () => {
-
         const tailFormItemLayout = {
-          wrapperCol: {
-            xs: {
-              span: 24,
-              offset: 0,
-            },
-            sm: {
-              span: 16,
-              offset: 0,
-            },
-          },
-        };
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                    offset: 0
+                },
+                sm: {
+                    span: 16,
+                    offset: 0
+                }
+            }
+        }
 
         return (
-                <SubmitVulnStyle>
-                    <div className="container-2">
-                        <div className="column-1"></div>
-                        <div className="column-2">
-                            <div className="container-3">
-                                <div className="container-3_column-1 shadowborder">
-                        			<div className='directoryHeader'>
-                        				<span><h1 id="mainTitle">Submit Vulnerability Report</h1></span>
-                        			</div>
-                        			<div className='subDirectoryHeader'>
-                        				<span>All data below will be enceripted with the bounty owners publick Etherum address.
+            <SubmitVulnStyle>
+                <div className="container-2">
+                    <div className="column-1"></div>
+                    <div className="column-2">
+                        <div className="container-3">
+                            <div className="container-3_column-1 shadowborder">
+                                <div className='directoryHeader'>
+                                    <span><h1 id="mainTitle">Submit Vulnerability Report</h1></span>
+                                </div>
+                                <div className='subDirectoryHeader'>
+                                    <span>All data below will be enceripted with the bounty owners publick Etherum address.
                                         A copy will also be saved and encrypted with the submiters publick Etherum address.</span>
-                        			</div>
+                                </div>
 
-                                    <div>
-                                        <br/><br/>
-                                        <p>Select The attack surface of the Vulnerability</p>
-                                        <SearchTable Values={attackValues} data={weaknessData}/>
-                                    </div>
+                                <div>
+                                    <br/><br/>
+                                    <p>Select The attack surface of the Vulnerability</p>
+                                    <SearchTable Values={attackValues} data={weaknessData}/>
+                                </div>
 
-                                    <div>
+                                <div>
 
-                                        <p>Select a Weakness, One the you think best describes the vulnerability.</p>
-                                        <SearchTable Values={weaknessValues} data={weaknessData}/>
+                                    <p>Select a Weakness, One the you think best describes the vulnerability.</p>
+                                    <SearchTable Values={weaknessValues} data={weaknessData}/>
 
-                                    </div>
+                                </div>
 
-                                    <div id="test">
-                                        <p>Report details</p>
-                                        <Markdown reduxStoreValue="submitVuln" data={markdownInitSubmitVuln}/>
-                                    </div>
-                                    <br/><br/><br/><br/>
-                                    <div>
-                                        <h1 id="mainTitle">Calculate Common Vulnerability Score</h1>
-                                        <CVSSScore/>
-                                    </div>
-                                    <Form>
+                                <div id="test">
+                                    <p>Report details</p>
+                                    <Markdown reduxStoreValue="submitVuln" data={markdownInitSubmitVuln}/>
+                                </div>
+                                <br/><br/><br/><br/>
+                                <div>
+                                    <h1 id="mainTitle">Calculate Common Vulnerability Score</h1>
+                                    <CVSSScore/>
+                                </div>
+                                <Form>
                                     <FormItem {...tailFormItemLayout}>
                                         <Button onClick={this.handleSubmit} type="primary" htmlType="button">Submit</Button>
                                     </FormItem>
-                                    </Form>
+                                </Form>
 
+                                <div className="directoryFooter"></div>
 
-                                    <div className="directoryFooter"></div>
-
-                                </div>
                             </div>
                         </div>
-                        <div className="column-3"></div>
                     </div>
-                </SubmitVulnStyle>
-            );
-        }
+                    <div className="column-3"></div>
+                </div>
+            </SubmitVulnStyle>
+        )
     }
-
-
-
+}
 
 const mapStateToProps = state => ({
     tableClick: state.tableClick,
     markdown: state.markdown,
     CVSSData: state.CVSSData,
     bountyCurrent: state.bountyCurrent,
-    ethereumWallet: state.ethereumWallet,
-});
+    ethereumWallet: state.ethereumWallet
+})
 
 const mapActionsToProps = {
 
-};
+}
 
-
-
-export default connect(mapStateToProps, mapActionsToProps)(SubmitVuln);
-
+export default connect(mapStateToProps, mapActionsToProps)(SubmitVuln)
 
 const SubmitVulnStyle = styled.div`
 height: auto;
@@ -314,26 +302,26 @@ height: auto;
 
 
 .table {
-	width: 100%;
+    width: 100%;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .table thead tr th{
-	vertical-align:middle;
-	padding-right:5px;
-	padding-left:5px;
+    vertical-align:middle;
+    padding-right:5px;
+    padding-left:5px;
     border-bottom: 1px solid #e5e5e5;
 }
 
 .table tbody tr td {
-	text-align:center;
-	vertical-align:middle;
+    text-align:center;
+    vertical-align:middle;
     border-bottom: 1px solid #e5e5e5;
 }
 
 .tableRow {
-	width:75%;
-	height:40px;
+    width:75%;
+    height:40px;
 }
 
 .table tbody tr td {
@@ -342,24 +330,24 @@ height: auto;
 }
 
 .table tbody tr td img {
-	padding: 5px;
-	margin-left: 5px;
-	width: 50px;
-	float: left;
-	border-radius:20%;
+    padding: 5px;
+    margin-left: 5px;
+    width: 50px;
+    float: left;
+    border-radius:20%;
 
 }
 
 .table tbody tr td div {
-	padding-top: 5px;
-	padding-left:15;
+    padding-top: 5px;
+    padding-left:15;
 
 }
 .table tbody tr td div p{
-	text-align: left;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     padding-top: 1px;
     padding-bottom: 3px;
 }
@@ -389,24 +377,24 @@ height: auto;
 }
 
 fieldset {
-  position: relative;
-  background-color: #f2f2f2;
-  margin-top: 50px;
-  border:0;
-  padding: 1em 0;
+    position: relative;
+    background-color: #f2f2f2;
+    margin-top: 50px;
+    border:0;
+    padding: 1em 0;
 }
 
 fieldset legend {
-background-color: #666666;
-color: #ffffff;
-margin: 0;
-width: 100%;
-padding: 0.5em 0px;
-text-indent: 1em;
+    background-color: #666666;
+    color: #ffffff;
+    margin: 0;
+    width: 100%;
+    padding: 0.5em 0px;
+    text-indent: 1em;
 }
 fieldset div.metric {
-  padding: 0;
-  margin: 0.5em 0;
+    padding: 0;
+    margin: 0.5em 0;
 }
 
 @media only screen and (min-width:768px) {
@@ -521,4 +509,4 @@ fieldset input:checked + label {
 
     div#scriptWarning { border: solid red 2px; background: #f5dddd; padding: 1em 1em 1em 1em; margin: 0.4em 0; }
 
-`;
+`

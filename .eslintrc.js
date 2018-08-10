@@ -1,5 +1,8 @@
 module.exports = {
-    "extends": "standard",
+    "extends": [
+      "standard",
+      'plugin:react/recommended'
+  ],
     "rules": {
         "indent": ["error", 4]
     },
