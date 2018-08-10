@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// eslint-disable-next-line
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-//import "antd/dist/antd.less";
-import styled from 'styled-components';
+// import "antd/dist/antd.less";
+import styled from 'styled-components'
 
-import {tableClickAction} from '../../redux_actions/action_tableClick';
-import {tableClickReducer} from '../../redux_reducers/reducer_tableClick';
+import {tableClickAction} from '../../redux_actions/action_tableClick'
 
 class SearchTable extends Component {
-    constructor(props) {
+    constructor (props) {
         super(props)
-        this.onSearchInput = this.onSearchInput.bind(this);
+        this.onSearchInput = this.onSearchInput.bind(this)
         this.state = {
-            data: this.props.data,
+            data: this.props.data
         }
     }
 
-    onSearchInput(e) {
-    const createNewState = []
+    onSearchInput (e) {
+        const createNewState = []
         this.props.data.forEach((item, i) => {
             if (item.weakness.toLowerCase().includes(e.target.value.toLowerCase())) {
                 createNewState.push(item)
             }
             this.setState({data: createNewState})
-        });
+        })
     }
 
     render = () => {
@@ -34,33 +34,33 @@ class SearchTable extends Component {
                 </div>
                 <div className="tableWrapper" style={{width: this.props.Values.width}}>
                     <div className="head1">{this.props.Values.header}</div>
-                        <div className="columnWrapper" style={{height: this.props.Values.height}}>
-                            <table className="myTable">
-                                <tbody>
+                    <div className="columnWrapper" style={{height: this.props.Values.height}}>
+                        <table className="myTable">
+                            <tbody>
                                 {this.state.data.map((key, index) => (
-                                <tr onClick={(e) => this.props.tableClickAction(key.key, this.props.Values.reduxTableName, key.weakness, key.CWE )} className={this.props.tableClick[this.props.Values.reduxTableName].key === key.key ? 'active': null} key={key.key}>
-                                    <td>{key.weakness} </td>
-                                    <td>{key.CWE}</td>
-                                </tr>
+                                    <tr onClick={(e) => this.props.tableClickAction(key.key, this.props.Values.reduxTableName, key.weakness, key.CWE)} className={this.props.tableClick[this.props.Values.reduxTableName].key === key.key ? 'active' : null} key={key.key}>
+                                        <td>{key.weakness} </td>
+                                        <td>{key.CWE}</td>
+                                    </tr>
                                 ))}
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </SearchTableStyle>
-        );
+        )
     }
 }
 const mapStateToProps = state => ({
-    tableClick: state.tableClick,
+    tableClick: state.tableClick
 
-});
+})
 const mapActionsToProps = {
-    tableClickAction,
+    tableClickAction
 
-};
-export default connect(mapStateToProps, mapActionsToProps)(SearchTable);
-
+}
+export default connect(mapStateToProps, mapActionsToProps)(SearchTable)
+// eslint-disable-next-line
 const SearchTableStyle = styled.div`
     .searchBox{
         width: 100%;
