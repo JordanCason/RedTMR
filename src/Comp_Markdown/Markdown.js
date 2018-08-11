@@ -1,96 +1,89 @@
-//import * as React from "react";
-import React, { Component } from 'react';
-import ReactMde, {ReactMdeTypes} from "react-mde";
-import ReactMarkdown from 'react-markdown';
+import React, { Component } from 'react'
+// import ReactMde, {ReactMdeTypes} from 'react-mde'
+import ReactMarkdown from 'react-markdown'
 
-
-//redux
-import { connect } from 'react-redux';
+// redux
+import { connect } from 'react-redux'
 import {markdownAction, markdownInitAction} from '../redux_actions/action_markdown'
 
 // other
-import styled from 'styled-components';
-import * as Showdown from "showdown";
+import styled from 'styled-components'
 
-
-//https://github.com/showdownjs/showdown/wiki/Showdown's-Markdown-syntax
+// https://github.com/showdownjs/showdown/wiki/Showdown's-Markdown-syntax
 
 class MarkDown extends Component {
-    constructor(props) {
-        super(props);
+    constructor (props) {
+        super(props)
         props.markdownInitAction(this.props.reduxStoreValue, this.props.data)
         this.state = {
-          code: "markdown-textbox-active",
-          preview: "markdown-textbox-none",
-        };
-      }
+            code: 'markdown-textbox-active',
+            preview: 'markdown-textbox-none'
+        }
+    }
 
       handleTabSwitch = e => {
-        this.setState(
-          e.target.name === "code"
-            ? { code: "markdown-textbox-active", preview: "markdown-textbox-none" }
-            : { code: "markdown-textbox-none", preview: "markdown-textbox-active md-preview" }
-        );
+          this.setState(
+              e.target.name === 'code'
+                  ? { code: 'markdown-textbox-active', preview: 'markdown-textbox-none' }
+                  : { code: 'markdown-textbox-none', preview: 'markdown-textbox-active md-preview' }
+          )
       };
 
       handleInput = e => {
-        this.props.markdownAction(e.target.name, e.target.value)
+          this.props.markdownAction(e.target.name, e.target.value)
       };
 
-  render() {
-    return (
-        <MarkDownStyle>
-            <div className="markdown-body">
-          <div className="markdown-header">
-            <div className="markdown-tabs">
-              <button
-                type='button'
-                onClick={this.handleTabSwitch}
-                name="code"
-                className="markdown-button markdown-button-left"
-              >Code</button>
-              <button
-                  type='button'
-                onClick={this.handleTabSwitch}
-                name="preview"
-                className="markdown-button markdown-button-right"
-              >Preview</button>
-            </div>
-          </div>
-          <textarea
-            className={`${this.state.code} ${'scrollbar'}`}
-            name={this.props.reduxStoreValue}
-            value={this.props.markdown[this.props.reduxStoreValue]}
-            onChange={this.handleInput}
-          />
-          <div>
-            <ReactMarkdown
-                className={`${this.state.preview} ${'scrollbar'}`}
-                source={this.props.markdown[this.props.reduxStoreValue]}
-                escapeHtml={false}
-             />
-          </div>
-        </div>
-      </MarkDownStyle>
-    );
-  }
+      render () {
+          return (
+              <MarkDownStyle>
+                  <div className="markdown-body">
+                      <div className="markdown-header">
+                          <div className="markdown-tabs">
+                              <button
+                                  type='button'
+                                  onClick={this.handleTabSwitch}
+                                  name="code"
+                                  className="markdown-button markdown-button-left">
+                              </button>
+                              <button
+                                  type='button'
+                                  onClick={this.handleTabSwitch}
+                                  name="preview"
+                                  className="markdown-button markdown-button-right">Preview
+                              </button>
+                          </div>
+                      </div>
+                      <textarea
+                          className={`${this.state.code} ${'scrollbar'}`}
+                          name={this.props.reduxStoreValue}
+                          value={this.props.markdown[this.props.reduxStoreValue]}
+                          onChange={this.handleInput}
+                      />
+                      <div>
+                          <ReactMarkdown
+                              className={`${this.state.preview} ${'scrollbar'}`}
+                              source={this.props.markdown[this.props.reduxStoreValue]}
+                              escapeHtml={false}
+                          />
+                      </div>
+                  </div>
+              </MarkDownStyle>
+          )
+      }
 }
 
 const mapStateToProps = state => ({
-    markdown: state.markdown,
-
-});
+    markdown: state.markdown
+})
 
 const mapActionsToProps = {
     markdownAction,
     markdownInitAction
-};
+}
 
-export default connect(mapStateToProps, mapActionsToProps)(MarkDown);
+export default connect(mapStateToProps, mapActionsToProps)(MarkDown)
 
-const MarkDownStyle = styled.div `
-
-
+const MarkDownStyle = styled.div`
 
     input:focus,
     select:focus,
@@ -146,8 +139,8 @@ const MarkDownStyle = styled.div `
 
 
     .scrollbar::-webkit-scrollbar {
-	width: 5px;
-	background-color: #F5F5F5;
+        width: 5px;
+        background-color: #F5F5F5;
 }
 
     .scrollbar::-webkit-scrollbar-thumb {
@@ -297,4 +290,4 @@ const MarkDownStyle = styled.div `
         margin: 0 0 2px;
         padding: 0 0 0 15px;
     }
-`;
+`

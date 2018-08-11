@@ -1,5 +1,4 @@
 // react
-/* eslint react/prop-types: "off" */
 /* eslint handle-callback-err: "off" */
 // eslint-disable-next-line
 import React, { Component } from 'react';

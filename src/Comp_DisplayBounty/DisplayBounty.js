@@ -1,105 +1,80 @@
 // react
-import React, { Component } from 'react';
-import { Redirect, withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-
+import React, {Component} from 'react'
+// import {Redirect, withRouter} from "react-router-dom"
+import {connect} from 'react-redux'
+// import {NavLink} from 'react-router-dom'
 
 // other
-import 'purecss';
-import styled from 'styled-components';
-import SubNav from '../Comp_Nav/SubNav.js'
-import {depositEthToast, confirmSendToast} from '../Comp_toast/Toast'
-import ReactMarkdown from 'react-markdown';
+import 'purecss'
+import styled from 'styled-components'
+// import SubNav from '../Comp_Nav/SubNav.js'
+// import {depositEthToast, confirmSendToast} from '../Comp_toast/Toast'
+import ReactMarkdown from 'react-markdown'
 
 // actions
-import { bountysListAction } from '../redux_actions/action_bountysList';
-import { bountyCurrentAction, checkOwnerAction } from '../redux_actions/action_bountyCurrent'
-import { depositEthAction, withdrawEthAction } from '../redux_actions/action_contractTransactions'
-import { walletAddressAction } from '../redux_actions/action_walletAddress'
-
+import {bountysListAction} from '../redux_actions/action_bountysList'
+import {bountyCurrentAction, checkOwnerAction} from '../redux_actions/action_bountyCurrent'
+import {depositEthAction, withdrawEthAction} from '../redux_actions/action_contractTransactions'
+import {walletAddressAction} from '../redux_actions/action_walletAddress'
 
 class DisplayBounty extends Component {
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this);
-        this.deposit = this.deposit.bind(this);
-        this.withdraw = this.withdraw.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+        this.deposit = this.deposit.bind(this)
+        this.withdraw = this.withdraw.bind(this)
         this.state = {
             depositValue: '',
-            withdrawValue: '',
-        };
+            withdrawValue: ''
+        }
     }
 
     withdraw() {
-        this.props.withdrawEthAction(
-            this.props.ethereumWallet.walletAddress,
-            this.props.bountyCurrent.bountyCurrent.address,
-            this.state.withdrawValue,
-            this.props.bountyCurrent.bountyCurrent.comName).then((result) => {
-                this.props.walletAddressAction( //@dev update eth address value in dropdown
-                    this.props.ethereumWallet.walletAddress
-                )
-                this.props.bountyCurrentAction( //@dev update Contract Balance
-                    this.props.bountyCurrent.bountyCurrent.address,
-                    this.props.bountyCurrent.bountyCurrent
-                )
-            })
-        this.setState({withdrawValue: ''});
+        this.props.withdrawEthAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.state.withdrawValue, this.props.bountyCurrent.bountyCurrent.comName).then((result) => {
+            this.props.walletAddressAction( // @dev update eth address value in dropdown
+                this.props.ethereumWallet.walletAddress)
+            this.props.bountyCurrentAction( // @dev update Contract Balance
+                this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountyCurrent)
+        })
+        this.setState({withdrawValue: ''})
     }
 
     deposit(e) {
-        this.props.depositEthAction(
-            this.props.ethereumWallet.walletAddress,
-            this.props.bountyCurrent.bountyCurrent.address,
-            this.state.depositValue,
-            this.props.bountyCurrent.bountyCurrent.comName).then((result) => {
-                this.props.walletAddressAction( //@dev update eth address value in dropdown
-                    this.props.ethereumWallet.walletAddress
-                )
-                this.props.bountyCurrentAction( //@dev update Contract Balance
-                    this.props.bountyCurrent.bountyCurrent.address,
-                    this.props.bountyCurrent.bountyCurrent
-                )
-            })
-        this.setState({depositValue: ''});
+        this.props.depositEthAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.state.depositValue, this.props.bountyCurrent.bountyCurrent.comName).then((result) => {
+            this.props.walletAddressAction( // @dev update eth address value in dropdown
+                this.props.ethereumWallet.walletAddress)
+            this.props.bountyCurrentAction( // @dev update Contract Balance
+                this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountyCurrent)
+        })
+        this.setState({depositValue: ''})
     }
 
     handleChange(evt) {
-        this.setState({ [evt.target.name]: evt.target.value });
+        this.setState({
+            [evt.target.name]: evt.target.value
+        })
     }
 
     componentDidMount() { // called directly every time we navagate to the component
 
     }
 
-    componentDidUpdate(prevProps){
-
-    }
+    componentDidUpdate(prevProps) {}
 
     render = () => {
-        const { bountyCurrent, bountyLoaded, isOwner } = this.props.bountyCurrent
-        const bountyAddress = this.props.match.params.id //@dev
+        const {bountyCurrent, bountyLoaded} = this.props.bountyCurrent
+        const bountyAddress = this.props.match.params.id // @dev
         if (bountyLoaded && bountyCurrent.address === bountyAddress) {
-            let ownerDisplay = ""
-            if (isOwner) {
-                ownerDisplay = "you are the owner of this contract"
-            }
-            else {
-                ownerDisplay = "you are not the owner of this contract"
-            }
+            return (<DisplayBountyStyle>
 
-            return (
-                <DisplayBountyStyle>
-
-                    <div className="container-2">
+                <div className="container-2">
                     <div className="column-1"></div>
                     <div className="column-2">
                         <div className="container-3">
                             <div className="container-3_column-1 shadowborder">
                                 <div>
-                				    <legend>Upload photo</legend>
-                                    <img src={bountyCurrent.uploadImg} alt='' />
+                                    <legend>Upload photo</legend>
+                                    <img src={bountyCurrent.uploadImg} alt=''/>
                                 </div>
                                 <div>
                                     <h2>{`Contract Address: ${bountyAddress}`}</h2>
@@ -111,74 +86,60 @@ class DisplayBounty extends Component {
                                     <br/><br/>
 
                                     <button name="depositValue" onClick={this.deposit}>Fund Contract</button>
-                                    <input name="depositValue" value={this.state.depositValue} onChange={this.handleChange} />
+                                    <input name="depositValue" value={this.state.depositValue} onChange={this.handleChange}/>
 
                                     <br/><br/>
 
                                     <button name="withdrawValue" onClick={this.withdraw}>withdraw</button>
-                                    <input name="withdrawValue" value={this.state.withdrawValue} onChange={this.handleChange} /><br/><br/><br/>
-
-
-
-                                    {/* <button onClick={() => confirmSendToast()}>test toast</button>
-                                    <button onClick={() => console.log(this)}>this</button> */}
+                                    <input name="withdrawValue" value={this.state.withdrawValue} onChange={this.handleChange}/><br/><br/><br/> {/* <button onClick={() => confirmSendToast()}>test toast</button>
+                                    <button onClick={() => console.log(this)}>this</button> */
+                                    }
 
                                     <br/><br/>
 
                                 </div>
 
-
                             </div>
                             <div className="container-3_column-2 shadowborder">
-                                <ReactMarkdown
-                                    className='md-preview'
-                                    source={bountyCurrent.Bountytextarea}
-                                    escapeHtml={false}
-                                 />
+                                <ReactMarkdown className='md-preview' source={bountyCurrent.Bountytextarea} escapeHtml={false}/>
 
                             </div>
                         </div>
                     </div>
                     <div className="column-3"></div>
-                    </div>
-                    <div className='footer'></div>
-        </DisplayBountyStyle>);
+                </div>
+                <div className='footer'></div>
+            </DisplayBountyStyle>)
         } else {
-            return(
-                <DisplayBountyStyle>
+            return (<DisplayBountyStyle>
 
-                    <div className="container-1">
-                        <div className="row-1">
-                    		<span>Bounty Information</span>
-                    	</div>
+                <div className="container-1">
+                    <div className="row-1">
+                        <span>Bounty Information</span>
                     </div>
+                </div>
             </DisplayBountyStyle>)
         }
     }
-
 }
 
+const mapStateToProps = state => ({
+    bountysList: state.bountysList,
+    bountyCurrent: state.bountyCurrent,
+    ethereumWallet: state.ethereumWallet,
+    contractTransactions: state.contractTransactions
+})
 
-    const mapStateToProps = state => ({
-        bountysList: state.bountysList,
-        bountyCurrent: state.bountyCurrent,
-        ethereumWallet: state.ethereumWallet,
-        contractTransactions: state.contractTransactions,
-    });
+const mapActionsToProps = {
+    bountysListAction,
+    bountyCurrentAction,
+    depositEthAction,
+    withdrawEthAction,
+    checkOwnerAction,
+    walletAddressAction
+}
 
-    const mapActionsToProps = {
-        bountysListAction,
-        bountyCurrentAction,
-        depositEthAction,
-        withdrawEthAction,
-        checkOwnerAction,
-        walletAddressAction,
-    };
-
-
-
-export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty);
-
+export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)
 
 const DisplayBountyStyle = styled.div`
 height: auto;
@@ -257,8 +218,8 @@ height: auto;
         width: 300px
         hight: 600px
         margin-left: auto;
-	    margin-right: auto;
-	    display: block;
+        margin-right: auto;
+        display: block;
         margin-top: 5px;
         margin-bottom: 20px;
 
@@ -410,137 +371,4 @@ height: auto;
         padding: 0 0 0 15px;
     }
 
-`;
-
-
-// componentDidMount() { // called directly every time we navagate to the component // could check for address switch
-//
-//     console.log("")
-//     console.log(`#####################`)
-//     console.log('# componentDidMount #')
-//     console.log(`#####################`)
-//     console.log(`#___________________#`)
-//     const { bountysList, bountysLoaded } = this.props.bountysList
-//     const { bountyCurrent, bountyLoaded } = this.props.bountyCurrent
-//     const bountyAddress = this.props.match.params.id
-//     if (!bountysLoaded) {
-//         console.log(`(${bountysLoaded}) bountys are not loaded`)
-//     }
-//     if (bountysLoaded) {
-//         console.log(`(${bountysLoaded}) bountys are loaded`)
-//     }
-//     if (!bountyLoaded) {
-//         console.log(`(${bountyLoaded}) bounty is not loaded`)
-//     }
-//     if (bountyLoaded) {
-//         console.log(`(${bountyLoaded}) bounty is loaded`)
-//     }
-//     if (bountyCurrent.address !== bountyAddress) {
-//         this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
-//         console.log(this)
-//     }
-//
-//     console.log(`#___________________#`)
-//     console.log("")
-// }
-// //life cycle with an internal change i.e a call to this.setState()
-// //1. shouldComponentUpdate - DO use for render controle DONT cause a re-render
-// //2. componentWillUpdate
-// //3. rendere - DO simple statments i.e just render the components DONT cause side effects like changes that cause a re-rinder
-// //4. send props to childern
-// //5. componentDidUpdate - DO make changes that cause re-render i.e changes to state if you want a re-render
-// shouldComponentUpdate() {
-//     console.log("")
-//     console.log("#########################")
-//     console.log("# shouldComponentUpdate #")
-//     console.log("#########################")
-//     const { bountysList, bountysLoaded } = this.props.bountysList
-//     const { bountyCurrent, bountyLoaded } = this.props.bountyCurrent
-//     if (!bountysLoaded) {
-//         console.log(`(${bountysLoaded}) bountys are not loaded`)
-//     }
-//     if (bountysLoaded) {
-//         console.log(`(${bountysLoaded}) bountys are loaded`)
-//     }
-//     if (!bountyLoaded) {
-//         console.log(`(${bountyLoaded}) bounty is not loaded`)
-//     }
-//     if (bountyLoaded) {
-//         console.log(`(${bountyLoaded}) bounty is loaded`)
-//     }
-//     console.log(`#_______________________#`)
-//     console.log("")
-//     return true
-// }
-//
-//
-// componentDidUpdate(){
-//     console.log("")
-//     console.log(`######################`)
-//     console.log("# componentDidUpdate #")
-//     console.log(`######################`)
-//     const { bountysList, bountysLoaded } = this.props.bountysList
-//     const { bountyCurrent, bountyLoaded } = this.props.bountyCurrent
-//     const bountyAddress = this.props.match.params.id
-//     if (!bountysLoaded) {
-//         console.log(`(${bountysLoaded}) bountys are not loaded`)
-//     }
-//     if (bountysLoaded) {
-//         console.log(`(${bountysLoaded}) bountys are loaded`)
-//     }
-//     if (!bountyLoaded) {
-//         console.log(`(${bountyLoaded}) bounty is not loaded`)
-//     }
-//     if (bountyLoaded) {
-//         console.log(`(${bountyLoaded}) bounty is loaded`)
-//     }
-//
-//     if (!bountyLoaded) {
-//         this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
-//         console.log(this)
-//     }
-//
-//     //     bountysListAction()}
-//     // if (!bountyLoaded) {
-//     //     this.props.bountyCurrentAction(this.props.match.id)
-//     console.log(`#____________________#`)
-//     console.log("")
-// }
-
-
-
-
-
-
-
-// constructor(props){
-//     super(props);
-//     this.getCurrentContract = this.getCurrentContract.bind(this)
-// }
-//
-// getCurrentContract() {
-//     var currentContract = {}
-//     currentContract.address = this.props.match.params.id
-//     console.log(currentContract)
-//     return currentContract
-//
-// }
-
-
-// getContractBalance(bountyAddress){
-//     return new Promise((resolve, reject) => {
-//         var info = {};
-//
-//         web3.eth.getBalance(bountyAddress).then(balance => {
-//             balance = web3.utils.fromWei(balance, 'ether')
-//             this.props.Bountys.Bountys[bountyAddress].balance = balance
-//             resolve(info)
-//         })
-//     })
-// }
-//
-// fundContract(bountyAddress) {
-//
-// }
-//componentDidMount(){
-// }
+`

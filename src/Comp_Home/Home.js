@@ -1,91 +1,89 @@
-import React, { Component } from 'react';
-//import {myContract, web3, bountyabi} from '../Comp_web3/abi.js';
-import styled from 'styled-components';
-//import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-//import {upload, loadimg, ipfs, ipfsHost} from '../Comp_IPFS/Ipfs';
-import { bountysListAction } from '../redux_actions/action_bountysList';
-import { bountyCurrent } from '../redux_actions/action_bountyCurrent'
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import 'purecss';
-
+import React, {Component} from 'react'
+// import {myContract, web3, bountyabi} from '../Comp_web3/abi.js'
+import styled from 'styled-components'
+// import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
+// import {upload, loadimg, ipfs, ipfsHost} from '../Comp_IPFS/Ipfs';
+import {bountysListAction} from '../redux_actions/action_bountysList'
+// import {bountyCurrent} from '../redux_actions/action_bountyCurrent'
+import {connect} from 'react-redux'
+import {NavLink} from 'react-router-dom'
+import 'purecss'
 
 class Home extends Component {
-
-    constructor(props) {
+    constructor (props) {
         super(props)
         this.props.filterTable.then((result) => {
             this.setState({
                 filterTable: Object.keys(result.value) // only load the keys and we can match them against the redux store bountysList
             })
         })
-        this.onSearchInput = this.onSearchInput.bind(this);
+        this.onSearchInput = this.onSearchInput.bind(this)
     }
 
-
-    onSearchInput(e) {
-        const { bountysList } = this.props.bountysList
-    const createNewState = []
+    onSearchInput (e) {
+        const {bountysList} = this.props.bountysList
+        const createNewState = []
         Object.keys(bountysList).forEach((item, i) => {
             let test = `${bountysList[item].comName}${bountysList[item].comAbout}`
             if (test.toLowerCase().includes(e.target.value.toLowerCase())) { // may want you use a fuzzy search
                 createNewState.push(item)
             }
             this.setState({filterTable: createNewState})
-        });
+        })
     }
 
-
     render = () => {
-        //console.log('render')
+        // console.log('render')
         if (!this.state) {
-            return(<div>render</div>)
+            return (<div>render</div>)
         } else {
-            const { bountysList } = this.props.bountysList
-            return (
-                <HomeStyle>
-                    <div className="container-1">
-                        <div className="row-1">
-                    		<span>Directory</span>
-                    	</div>
-                    	<div className="row-2 pure-form pure-form-stacked">
-                    		<span value="Search" id="search"></span>
-                            <input className='pure-u-23-24' id='' onKeyUp={this.onSearchInput} placeholder="Search.." title="Type in a name" />
-                    	</div>
+            const {bountysList} = this.props.bountysList
+            return (<HomeStyle>
+                <div className="container-1">
+                    <div className="row-1">
+                        <span>Directory</span>
                     </div>
-                    <div className="container-2">
-                        <div className="column-1"></div>
-                        <div className="column-2">
-                            <div className="container-3">
-                                <div className="container-3_column-1 shadowborder">
-                        			<div className='directoryHeader'>
-                        				<span>Directory Header</span>
-                        			</div>
-                        			<div className='subDirectoryHeader'>
-                        				<span>Sub Header</span>
+                    <div className="row-2 pure-form pure-form-stacked">
+                        <span value="Search" id="search"></span>
+                        <input className='pure-u-23-24' id='' onKeyUp={this.onSearchInput} placeholder="Search.." title="Type in a name"/>
+                    </div>
+                </div>
+                <div className="container-2">
+                    <div className="column-1"></div>
+                    <div className="column-2">
+                        <div className="container-3">
+                            <div className="container-3_column-1 shadowborder">
+                                <div className='directoryHeader'>
+                                    <span>Directory Header</span>
+                                </div>
+                                <div className='subDirectoryHeader'>
+                                    <span>Sub Header</span>
 
-                        			</div>
-                        				<table className="table">
-                        					<thead>
-                        						<tr>
-                        							<th className="tableRow" />
-                        							<th>Min</th>
-                        							<th>Max</th>
-                        							<th>balance</th>
-                        						</tr>
-                        					</thead>
-                        				</table>
+                                </div>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th className="tableRow"/>
+                                            <th>Min</th>
+                                            <th>Max</th>
+                                            <th>balance</th>
+                                        </tr>
+                                    </thead>
+                                </table>
 
-                                        {this.state.filterTable.map((key, index) => (  // count links to the correct
-                                        <NavLink style={{ textDecoration: 'none' }} className="tableLink" to={`/Bounty/${key}`} key={key} >
-                                            <table className={"table"} id="bountyRow" >
-                                                <tbody className={"sethover"} >
+                                {
+                                    this.state.filterTable.map((key, index) => ( // count links to the correct
+                                        <NavLink style={{
+                                            textDecoration: 'none'
+                                        }} className="tableLink" to={`/Bounty/${key}`} key={key}>
+                                            <table className={'table'} id="bountyRow">
+                                                <tbody className={'sethover'}>
                                                     <tr>
-                                                        <td className={"tableRow"} id={bountysList[key]}>
-                                                            <img src={bountysList[key].uploadImg} alt='' />
+                                                        <td className={'tableRow'} id={bountysList[key]}>
+                                                            <img src={bountysList[key].uploadImg} alt=''/>
                                                             <div>
-                                                            <p>{bountysList[key].comName}</p>
-                                                            <p>{bountysList[key].comAbout}</p>
+                                                                <p>{bountysList[key].comName}</p>
+                                                                <p>{bountysList[key].comAbout}</p>
                                                             </div>
                                                         </td>
                                                         <td>{bountysList[key].minEth}</td>
@@ -94,33 +92,28 @@ class Home extends Component {
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </NavLink>))}
+                                        </NavLink>))
+                                }
 
-                                    <div className="directoryFooter"></div>
+                                <div className="directoryFooter"></div>
 
-                                </div>
                             </div>
                         </div>
-                        <div className="column-3"></div>
                     </div>
-                </HomeStyle>
-            );
+                    <div className="column-3"></div>
+                </div>
+            </HomeStyle>)
         }
     }
 }
 
-
-
-const mapStateToProps = state => ({
-    bountysList: state.bountysList,
-});
+const mapStateToProps = state => ({bountysList: state.bountysList})
 
 const mapActionsToProps = {
-    bountysListAction,
-};
+    bountysListAction
+}
 
-export default connect(mapStateToProps, mapActionsToProps)(Home);
-
+export default connect(mapStateToProps, mapActionsToProps)(Home)
 
 const HomeStyle = styled.div`
 height: auto;
@@ -214,27 +207,27 @@ height: auto;
 }
 
 .table {
-	width: 100%;
+    width: 100%;
     font-family: Arial, Helvetica, sans-serif;
 
 }
 
 .table thead tr th{
-	vertical-align:middle;
-	padding-right:5px;
-	padding-left:5px;
+    vertical-align:middle;
+    padding-right:5px;
+    padding-left:5px;
     border-bottom: 1px solid #e5e5e5;
 }
 
 .table tbody tr td {
-	text-align:center;
-	vertical-align:middle;
+    text-align:center;
+    vertical-align:middle;
     border-bottom: 1px solid #e5e5e5;
 }
 
 .tableRow {
-	width:75%;
-	height:40px;
+    width:75%;
+    height:40px;
 }
 
 .table tbody tr td {
@@ -243,24 +236,24 @@ height: auto;
 }
 
 .table tbody tr td img {
-	padding: 5px;
-	margin-left: 5px;
-	width: 50px;
-	float: left;
-	border-radius:20%;
+    padding: 5px;
+    margin-left: 5px;
+    width: 50px;
+    float: left;
+    border-radius:20%;
 
 }
 
 .table tbody tr td div {
-	padding-top: 5px;
-	padding-left:15;
+    padding-top: 5px;
+    padding-left:15;
 
 }
 .table tbody tr td div p{
-	text-align: left;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     padding-top: 1px;
     padding-bottom: 3px;
 }
@@ -283,4 +276,4 @@ height: auto;
     background-color: white;
 }
 
-`;
+`

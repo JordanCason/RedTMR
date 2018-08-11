@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import styled from 'styled-components'
 import AddressDropdown from './Address_dropdown_comp/dropdown'
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
 class Navigation extends Component {
-    render() {
-        return(
+    render () {
+        return (
             <MainNav>
                 <NavLink exact activeClassName="active" className="NavLink" to="/">Directory</NavLink>
                 <NavLink activeClassName="active" className="NavLink" to="/CreateBounty">Create Contract</NavLink>
@@ -17,7 +17,7 @@ class Navigation extends Component {
     }
 }
 
-export default Navigation;
+export default Navigation
 
 const MainNav = styled.div`
 display: flex;
@@ -42,23 +42,16 @@ display: flex;
     text-decoration: none;
     font-size: 17px;
 }
-
-    .NavLink:hover {
-        border-bottom: 4px solid #a02020;
-        color: black;
-    }
-    .active {
-        border: none;
-        -moz-outline-style: none
-        outline: 0;
-        border-top: 4px solid #494649;
-        border-bottom: 4px solid #a02020;
-        color: white;
-    }
-`;
-
-
-
-
-
-//
+.NavLink:hover {
+    border-bottom: 4px solid #a02020;
+    color: black;
+}
+.active {
+    border: none;
+    -moz-outline-style: none
+    outline: 0;
+    border-top: 4px solid #494649;
+    border-bottom: 4px solid #a02020;
+    color: white;
+}
+`

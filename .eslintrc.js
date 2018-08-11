@@ -4,7 +4,9 @@ module.exports = {
       'plugin:react/recommended'
   ],
     "rules": {
-        "indent": ["error", 4]
+        "indent": ["error", 4],
+        "react/prop-types": 0,
+        "space-before-function-paren": 0,
     },
     "parser": "babel-eslint"
 };
