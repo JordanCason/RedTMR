@@ -33,7 +33,6 @@ class Home extends Component {
     }
 
     render = () => {
-        // console.log('render')
         if (!this.state) {
             return (<div>render</div>)
         } else {
@@ -76,7 +75,7 @@ class Home extends Component {
                                         <NavLink style={{
                                             textDecoration: 'none'
                                         }} className="tableLink" to={`/Bounty/${key}`} key={key}>
-                                            <table className={'table'} id="bountyRow">
+                                            <table className={this.props.ethereumWallet.walletAddress === bountysList[key].owner ? 'table ownerTable' : 'table'} id="bountyRow">
                                                 <tbody className={'sethover'}>
                                                     <tr>
                                                         <td className={'tableRow'} id={bountysList[key]}>
@@ -107,7 +106,10 @@ class Home extends Component {
     }
 }
 
-const mapStateToProps = state => ({bountysList: state.bountysList})
+const mapStateToProps = state => ({
+    bountysList: state.bountysList,
+    ethereumWallet: state.ethereumWallet
+})
 
 const mapActionsToProps = {
     bountysListAction
@@ -261,6 +263,13 @@ height: auto;
 .table tbody tr td div p:last-child{
     color: #828282;
 }
+
+.ownerTable tr {
+background-color: #a02020;
+
+}
+
+
 
 .sethover:hover {
     background-color:#f6f5f5;
