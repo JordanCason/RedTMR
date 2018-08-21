@@ -23,11 +23,10 @@ contract Bounty{
     }
 
     mapping (address => bountyStage) public mappingAddressToStruct;
-    address[] public SubmissionArray;
+    address[] public SubmissionArray = [0x00];
 
     constructor(uint _index, address _sender, string _ipfs) public payable {    //@Update change ipfs to bytes
         lock = false;
-        SubmissionArray.push(0x00); //@dev init array
         index = _index;             //@Dev BountyFactory array position
         owner = _sender;            //@dev msg.sender pass through from BountyFactory
         ipfs = _ipfs;

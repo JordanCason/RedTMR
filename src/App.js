@@ -1,57 +1,55 @@
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bountysListAction } from './redux_actions/action_bountysList';
-//import { web3 } from './Comp_web3/abi.js';
-//import styled from 'styled-components';
-import styled from 'styled-components';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bountysListAction } from './redux_actions/action_bountysList'
+// import { web3 } from './Comp_web3/abi.js'
+// import styled from 'styled-components'
+import styled from 'styled-components'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Navigation from './Comp_Nav/Nav'
 import SubNav from './Comp_Nav/SubNav'
 import Footer from './Comp_Footer/Footer'
-import Home from './Comp_Home/Home';
+import Home from './Comp_Home/Home'
 import CreateBounty from './Comp_CreateBounty/CreateBounty'
 import DisplayBounty from './Comp_DisplayBounty/DisplayBounty'
 import SubmitVuln from './Comp_SubmitVuln/SubmitVuln'
+import HackerWorkflow from './Comp_SubmitVuln/Comp_HackerWorkflow/HackerWorkflow'
+import OwnerWorkflow from './Comp_SubmitVuln/Comp_OwnerWorkflow/OwnerWorkflow'
 
-
-//https://github.com/ReactTraining/react-router/blob/master/packages/react-router-dom/docs/guides/quick-start.md
-//https://www.youtube.com/watch?v=3B588JwyT18 A good youtube routing video
-
+// https://github.com/ReactTraining/react-router/blob/master/packages/react-router-dom/docs/guides/quick-start.md
+// https://www.youtube.com/watch?v=3B588JwyT18 A good youtube routing video
 
 class App extends Component {
     constructor(props) {
         super(props)
-    const loadBountys = this.loadBountys.bind(this)
-    this.state = {
-        filterTable: this.loadBountys() // calling loadBountys here because we want them to load first on page refresh.. \
-        //may be able to lode previouse state in redux after refresh in futrue
-    }
-
+        this.state = {
+            filterTable: this.loadBountys() // calling loadBountys here because we want them to load first on page refresh.. \
+        // may be able to lode previouse state in redux after refresh in futrue
+        }
     }
 
     loadBountys() {
-         if (!this.props.bountysList.bountysLoaded) { // Only load bountys if they have not been rendered alrady
-             return(this.props.bountysListAction())
-         }
+        if (!this.props.bountysList.bountysLoaded) { // Only load bountys if they have not been rendered alrady
+            return (this.props.bountysListAction())
+        }
     }
 
-
   render = () => {
-
-    return (
-        <Router basename="/ipns/QmRnw4LMRat6UAqsQwftuJkh3Wrbdc9hpQBaWYPfFu4oL8">
-            <AppDiv>
-                <Navigation />
-                <Route exact path="/" render={(props) => <Home filterTable={this.state.filterTable} {...props} /> }/>
-                <Route path="/CreateBounty" component={CreateBounty}/>
-                <Route path="/Bounty/:id" component={SubNav}/>
-                <Route exact path="/Bounty/:id/submit" component={SubmitVuln}/>
-                <Route exact path="/Bounty/:id" component={DisplayBounty}/>
-                <Footer />
-            </AppDiv>
-        </Router>
-    );
+      return (
+          <Router basename="/ipns/QmRnw4LMRat6UAqsQwftuJkh3Wrbdc9hpQBaWYPfFu4oL8">
+              <AppDiv>
+                  <Navigation />
+                  <Route exact path="/" render={(props) => <Home filterTable={this.state.filterTable} {...props} /> }/>
+                  <Route path="/CreateBounty" component={CreateBounty}/>
+                  <Route path="/Bounty/:id" component={SubNav}/>
+                  <Route exact path="/Bounty/:id/submit" component={SubmitVuln}/>
+                  <Route exact path="/Bounty/:id" component={DisplayBounty}/>
+                  <Route exact path="/Bounty/:id/ownerWorkflow" component={OwnerWorkflow}/>
+                  <Route exact path="/Bounty/:id/hackerWorkflow" component={HackerWorkflow}/>
+                  <Footer />
+              </AppDiv>
+          </Router>
+      )
   }
 }
 
@@ -61,31 +59,18 @@ class App extends Component {
 // I couldent get the bountysList to cause a rerender when the data was actualy returnd
 
 const mapStateToProps = state => ({
-    bountysList: state.bountysList,
-});
-
+    bountysList: state.bountysList
+})
 
 const mapActionsToProps = {
-    bountysListAction,
+    bountysListAction
+}
 
-};
-
-export default connect(mapStateToProps, mapActionsToProps)(App);
-
+export default connect(mapStateToProps, mapActionsToProps)(App)
 
 const AppDiv = styled.div`
     height: auto;
-`;
-
-const Ethereum_test = () => (
-  <div>
-
-  </div>
-)
-
-
-
-
+`
 
 // const Topics = ({ match }) => (
 //   <div>

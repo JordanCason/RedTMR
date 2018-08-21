@@ -14,7 +14,6 @@ class AddressDropdown extends Component {
         super(props)
         // @DEV initial address from provider
         web3.eth.getAccounts().then((initAddress) => {
-            console.log(`init ${initAddress[0]}`)
             this.props.walletAddressAction(initAddress[0])
         })
     }
@@ -23,7 +22,6 @@ class AddressDropdown extends Component {
         // @dev lissen for address to switch in MetaMask
         web3.currentProvider.publicConfigStore.on('update', (update) => {
             if (this.props.ethereumWallet.walletAddress !== web3.utils.toChecksumAddress(update.selectedAddress)) {
-                console.log(`update ${update.selectedAddress}`)
                 this.props.walletAddressAction(update.selectedAddress)
             }
         })

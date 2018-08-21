@@ -38,7 +38,9 @@ class SearchTable extends Component {
                         <table className="myTable">
                             <tbody>
                                 {this.state.data.map((key, index) => (
-                                    <tr onClick={(e) => this.props.tableClickAction(key.key, this.props.Values.reduxTableName, key.weakness, key.CWE)} className={this.props.tableClick[this.props.Values.reduxTableName].key === key.key ? 'active' : null} key={key.key}>
+                                    <tr onClick={(e) => this.props.tableClickAction(key.key, this.props.Values.reduxTableName, key.weakness, key.CWE)}
+                                        className={this.props.tableClick[this.props.Values.reduxTableName].key === key.key ? 'active' : null}
+                                        key={key.key}>
                                         <td>{key.weakness} </td>
                                         <td>{key.CWE}</td>
                                     </tr>

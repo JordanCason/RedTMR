@@ -34,7 +34,34 @@ class Home extends Component {
 
     render = () => {
         if (!this.state) {
-            return (<div>render</div>)
+            return (<HomeStyle>
+                <div className="container-1">
+                    <div className="row-1">
+                        <span>Directory</span>
+                    </div>
+                    <div className="row-2 pure-form pure-form-stacked">
+                        <span value="Search" id="search"></span>
+                        <input className='pure-u-23-24' id='' onKeyUp={this.onSearchInput} placeholder="Search.." title="Type in a name"/>
+                    </div>
+                </div>
+                <div className="container-2">
+                    <div className="column-1"></div>
+                    <div className="column-2">
+                        <div className="container-3">
+                            <div className="container-3_column-1 shadowborder">
+                                <div className='directoryHeader'>
+                                    <span>Directory Header</span>
+                                </div>
+                                <div className='subDirectoryHeader'>
+                                    <span>Sub Header</span>
+                                </div>
+                                <div className="directoryFooter"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column-3"></div>
+                </div>
+            </HomeStyle>)
         } else {
             const {bountysList} = this.props.bountysList
             return (<HomeStyle>
