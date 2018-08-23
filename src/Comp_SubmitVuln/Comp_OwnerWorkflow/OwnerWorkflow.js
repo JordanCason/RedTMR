@@ -2,6 +2,9 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 
+// redux
+import { acceptVulnAction } from '../../redux_actions/action_bountyCurrent.js'
+
 class DisplayBounty extends Component {
     handleSubmit = (e) => {}
     // @DEVEND
@@ -63,7 +66,16 @@ class DisplayBounty extends Component {
                                 <br/><br/>
                             </div>
                         </div>
-                        <div className="container-3_column-2 shadowborder"></div>
+                        <div className="container-3_column-2 shadowborder">
+                            <div>
+                                {console.log(this.props.bountyCurrent)}
+                                OwnerAddress: {this.props.bountyCurrent.bountyCurrent.owner}<br/>
+                                Submmiter: {this.props.bountyCurrent.bountySubmissionState.submitter}<br/>
+                                BountyStage: {this.props.bountyCurrent.bountySubmissionState.stage}<br/>
+                                LastActionBy: {this.props.bountyCurrent.bountySubmissionState.lastActionBy}<br/>
+                            </div>
+                            <button type="button" onClick={() => { this.props.acceptVulnAction(this.props.bountyCurrent.bountyCurrent.address) }}>accept Vulnerablity</button>
+                        </div>
                     </div>
                 </div>
                 <div className="column-3"></div>
@@ -73,13 +85,17 @@ class DisplayBounty extends Component {
     }
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({
+    bountyCurrent: state.bountyCurrent
+})
 
-const mapActionsToProps = {}
+const mapActionsToProps = {
+    acceptVulnAction
+}
 
 export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)
 
-const DisplayBountyStyle = styled.div `
+const DisplayBountyStyle = styled.div`
 height: auto;
 
 

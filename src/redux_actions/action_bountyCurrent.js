@@ -1,5 +1,6 @@
 import {web3, bountyabi} from '../Comp_web3/abi.js'
 import { store } from '../index.js'
+import {ipfs} from '../Comp_IPFS/Ipfs'
 
 export const CURRENT_BOUNTY = 'CURRENT_BOUNTY'
 export const CURRENT_BOUNTY_PENDING = 'CURRENT_BOUNTY_PENDING'
@@ -16,13 +17,19 @@ export function bountyCurrentAction(bountyAddress, bountyInfo) {
             web3.eth.getBalance(bountyAddress).then(balance => {
                 balance = web3.utils.fromWei(balance, 'ether')
                 bountyInfo.balance = balance
-                if (bountyInfo.owner === this.ethereumWallet.walletAddress) {
-                    bountyInfo.isOwner = true
-                } else {
-                    bountyInfo.isOwner = false
-                }
-                store.dispatch(checkBountyStateAction(this.ethereumWallet.walletAddress, bountyAddress))
-                resolve(bountyInfo)
+                store.dispatch(checkOwnerAction(bountyInfo.owner, this.ethereumWallet.walletAddress)).then(result => {
+                    console.log(result)
+                    if (!result.value) {
+                        store.dispatch(checkBountyStateHackerAction(this.ethereumWallet.walletAddress, bountyAddress))
+                        resolve(bountyInfo)
+                    } else if (result.value) {
+                        console.log('owner Check')
+                        store.dispatch(checkBountyOwnerStateAction(bountyAddress))
+                        resolve(bountyInfo)
+                    } else {
+                        resolve(bountyInfo)
+                    }
+                })
             })
         })
     }
@@ -30,29 +37,31 @@ export function bountyCurrentAction(bountyAddress, bountyInfo) {
 
 export const CHECK_OWNER = 'CHECK_OWNER'
 export const CHECK_OWNER_FULFILLED = 'CHECK_OWNER_FULFILLED'
-
 export const checkOwnerAction = (cureWalletAddress, bountyCurrent) => {
     return {
         type: CHECK_OWNER,
         payload: new Promise((resolve, reject) => {
-            if (bountyCurrent.owner === cureWalletAddress) {
-                resolve(true)
+            let payload
+            console.log(`%c ${cureWalletAddress} = ${bountyCurrent}`, `color:blue`)
+            if (bountyCurrent === cureWalletAddress) {
+                payload = true
             } else {
-                resolve(false)
+                payload = false
             }
+            resolve(payload)
         })
     }
 }
 
-export const CHECK_BOUNTY_STATE = 'CHECK_BOUNTY_STATE'
-export const CHECK_BOUNTY_STATE_FULFILLED = 'CHECK_BOUNTY_STATE_FULFILLED'
 
-export const checkBountyStateAction = (walletAddress, bountyAddress) => {
+export const CHECK_BOUNTY_HACKER_STATE = 'CHECK_BOUNTY_HACKER_STATE'
+export const CHECK_BOUNTY_HACKER_STATE_FULFILLED = 'CHECK_BOUNTY_HACKER_STATE_FULFILLED'
+
+export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
     return {
-        type: CHECK_BOUNTY_STATE,
+        type: CHECK_BOUNTY_HACKER_STATE,
         payload: new Promise((resolve, reject) => {
             const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
-            console.log(bountyContract.methods)
             bountyContract.methods.mappingAddressToStruct(walletAddress).call().then(result => {
                 let payload = {}
                 payload.CCVE = result.CCVE
@@ -67,6 +76,46 @@ export const checkBountyStateAction = (walletAddress, bountyAddress) => {
     }
 }
 
+export const CHECK_BOUNTY_OWNER_STATE = 'CHECK_BOUNTY_OWNER_STATE'
+export const CHECK_BOUNTY_OWNER_STATE_FULFILLED = 'CHECK_BOUNTY_OWNER_STATE_FULFILLED'
+
+export const checkBountyOwnerStateAction = (bountyAddress) => {
+    return {
+        type: CHECK_BOUNTY_OWNER_STATE,
+        payload: new Promise((resolve, reject) => {
+            const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
+            let ownerSubmissionsArray = {}
+            // @dev arraylength is the amount of submited vulnerablitys in the contract
+            bountyContract.methods.arraylength().call().then(result => {
+                for (let i = 1; i < parseInt(result, 10) + 1; i++) {
+                    // @dev submissionArray holds the address to each submited vulnerablity
+                    bountyContract.methods.SubmissionArray(i).call().then(address => {
+                        // @dev get the ipfs link and remaning contract information
+                        bountyContract.methods.mappingAddressToStruct(address).call().then(result => {
+                            let submission = {}
+                            submission.ipfsSubmission = web3.utils.hexToUtf8(result.ipfsSubmission)
+                            submission.lastActionBy = result.lastActionBy
+                            submission.stage = result.stage
+                            submission.submitter = result.submitter
+                            ipfs.catJSON(submission.ipfsSubmission, (err, ipfsresult) => {
+                                console.log('here')
+                                submission = {
+                                    ...submission,
+                                    ...ipfsresult
+                                }
+                                console.log(submission)
+                                ownerSubmissionsArray[i] = submission
+                            })
+                        })
+                    })
+                }
+            })
+            resolve(ownerSubmissionsArray)
+        })
+    }
+}
+
+
 export const CURRENT_BOUNTY_CLEANUP = 'CURRENT_BOUNTY_CLEANUP'
 
 export function currentBountCleanupAction(name, value) {
@@ -75,3 +124,97 @@ export function currentBountCleanupAction(name, value) {
         payload: ''
     }
 }
+
+
+
+export const ACCEPT_VULN = 'ACCEPT_VULN'
+export const ACCEPT_VULN_FULFILLED = 'ACCEPT_VULN_FULFILLED'
+
+export const acceptVulnAction = (bountyAddress) => {
+    console.log(bountyAddress)
+    return {
+        type: ACCEPT_VULN,
+        payload: new Promise((resolve, reject) => {
+            console.log('vulnerablity')
+            const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
+            bountyContract.methods.acceptVuln().call().then(result => {
+                console.log(result)
+                resolve(result)
+            })
+        })
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// working space

@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import styled from 'styled-components'
+
+// redux
+import { acceptVulnAction } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
     handleSubmit = (e) => {}
@@ -18,19 +21,60 @@ class DisplayBounty extends Component {
                                 {/* <img src={bountyCurrent.uploadImg} alt=''/> */}
                             </div>
                             <div>
-                                <h2>{`Contract Address: `}</h2>
-                                <h2>{`Contract Balance: `}</h2>
-                                <h2>{`Company Name: `}</h2>
-                                <h2>{`Email: `}</h2>
-                                <h2>{`Mim Payout: `}</h2>
-                                <h2>{`Max Payout: `}</h2>
-                                <br/><br/>
-                                <br/><br/>
+                                <div className='body'>
+                                    <div className="timeline">
+                                        <div className="container active">
+                                            <div>
+                                                <h2>18/12/18 12:45PM</h2>
+                                                <p>Bounty Has been submited</p>
+                                            </div>
+                                        </div>
+                                        <div className="container">
+                                            <div>
+                                                <h2>2016</h2>
+                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, </p>
+                                            </div>
+                                        </div>
+                                        <div className="container">
+                                            <div>
+                                                <h2>2015</h2>
+                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+                                            </div>
+                                        </div>
+                                        <div className="container">
+                                            <div>
+                                                <h2>2012</h2>
+                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+                                            </div>
+                                        </div>
+                                        <div className="container">
+                                            <div>
+                                                <h2>2011</h2>
+                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+                                            </div>
+                                        </div>
+                                        <div className="container">
+                                            <div>
+                                                <h2>2007</h2>
+                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <br/><br/><br/>
                                 <br/><br/>
                             </div>
                         </div>
                         <div className="container-3_column-2 shadowborder">
+                            <div>
+                                {console.log(this.props.bountyCurrent)}
+                                OwnerAddress: {this.props.bountyCurrent.bountyCurrent.owner}<br/>
+                                Submmiter: {this.props.bountyCurrent.bountySubmissionState.submitter}<br/>
+                                BountyStage: {this.props.bountyCurrent.bountySubmissionState.stage}<br/>
+                                LastActionBy: {this.props.bountyCurrent.bountySubmissionState.lastActionBy}<br/>
+                            </div>
+                            <button type="button" onClick={() => { this.props.acceptVulnAction(this.props.bountyCurrent.bountyCurrent.address) }}>accept Vulnerablity</button>
                         </div>
                     </div>
                 </div>
@@ -42,17 +86,117 @@ class DisplayBounty extends Component {
 }
 
 const mapStateToProps = state => ({
-
+    bountyCurrent: state.bountyCurrent
 })
 
 const mapActionsToProps = {
-
+    acceptVulnAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)
 
 const DisplayBountyStyle = styled.div`
 height: auto;
+
+
+
+
+.body {
+    background-color: white;
+    font-family: Helvetica, sans-serif;
+}
+
+/* The actual timeline (the vertical ruler) */
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* The actual timeline (the vertical ruler) */
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    background-color: #494649;
+    top: 0;
+    bottom: 0;
+    left: 15px;
+    margin-left: -3px;
+}
+
+/* Container around content */
+.container {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    left: 19px;
+
+}
+
+/* The circles on the timeline */
+.container::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: -17px;
+    background-color: white;
+    border: 4px solid #494649;
+    top: 15px;
+    border-radius: 50%;
+    z-index: 1;
+    left: 15px;
+    left: -16px;
+}
+
+
+/* Add arrows to the right container (pointing left) */
+.container::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 18px;
+    width: 0;
+    z-index: 1;
+    left: 30px;
+    border: medium solid #494649;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #494649 transparent transparent;
+}
+
+/* The actual content */
+.container > div {
+    padding: 20px 30px;
+    background-color: white;
+    position: relative;
+    border: 1px solid #494649;
+    border-radius: 6px;
+}
+
+.active > div {
+    border: 3px solid #a02020;
+}
+
+.active::after {
+    border: 4px solid #a02020;
+    background-color: #a02020;
+}
+
+.active::before {
+    border-color: transparent #a02020 transparent transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
 
     .container-1 {
         display: flex;

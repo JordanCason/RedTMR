@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 
 // actions
 import { bountysListAction } from '../redux_actions/action_bountysList'
-import { bountyCurrentAction, checkOwnerAction, checkBountyStateAction, currentBountCleanupAction } from '../redux_actions/action_bountyCurrent'
+import { bountyCurrentAction, checkOwnerAction, currentBountCleanupAction } from '../redux_actions/action_bountyCurrent'
 import { depositEthAction, withdrawEthAction } from '../redux_actions/action_contractTransactions'
 import { walletAddressAction } from '../redux_actions/action_walletAddress'
 
@@ -32,8 +32,10 @@ class SubNav extends Component {
             this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress]) // @dev bountyCurrentAction also sets the isOwner state
         }
         if (bountyLoaded && prevWalletAddress !== cureWalletAddress) { // @dev if wallet address changes check if owner again
-            this.props.checkOwnerAction(cureWalletAddress, bountyCurrent)
-            this.props.checkBountyStateAction(cureWalletAddress, bountyCurrent.address)
+            console.log(bountyCurrent)
+            // this.props.checkOwnerAction(cureWalletAddress, bountyCurrent.owner)
+            // this.props.checkBountyStateAction(cureWalletAddress, bountyCurrent.address)
+            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
         }
     }
 
@@ -42,6 +44,7 @@ class SubNav extends Component {
     }
 
     render() {
+        console.log(this.props.bountyCurrent.isOwner)
         // @dev was getting flicker when trying to load the proper subnav tabs and if else statmens were the only way i was able to fix.
         if (!this.props.bountyCurrent.isOwner && !this.props.bountyCurrent.bountySubmission) {
             return (
@@ -92,7 +95,6 @@ const mapActionsToProps = {
     withdrawEthAction,
     checkOwnerAction,
     walletAddressAction,
-    checkBountyStateAction,
     currentBountCleanupAction
 
 }

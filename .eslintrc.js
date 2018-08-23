@@ -8,6 +8,7 @@ module.exports = {
         "react/prop-types": 0,
         "space-before-function-paren": 0,
         "handle-callback-err": 0,
+        "no-multiple-empty-lines": 0,
     },
     "parser": "babel-eslint"
 };

@@ -5,7 +5,7 @@ contract Bounty{
     address owner;
     string ipfs;
     bool lock;
-
+    bool votingEligible;
     bytes1 submit = 0x01;
     bytes1 accept = 0x02;
     bytes1 deny   = 0x03;
@@ -19,11 +19,11 @@ contract Bounty{
         bytes1 stage;
         bytes4 CCVE;
         bytes ipfsSubmission;
-        address lastActionBy;
+        address lastActionVia;
     }
 
     mapping (address => bountyStage) public mappingAddressToStruct;
-    address[] public SubmissionArray = [0x00];
+    address[] public SubmissionArray = [0x00]; //@dev init submissionArray[0] with 0x00 to keep numbers aligned
 
     constructor(uint _index, address _sender, string _ipfs) public payable {    //@Update change ipfs to bytes
         lock = false;
@@ -34,6 +34,16 @@ contract Bounty{
 
     modifier onlyOwner() {
         require(msg.sender == owner, "You are not the owner");
+        _;
+    }
+
+    modifier party() {
+        require(msg.sender == owner || msg.sender == mappingAddressToStruct[msg.sender].submitter, "you are not a party to this contract");
+        _;
+    }
+
+    modifier turn() {
+        require(msg.sender != mappingAddressToStruct[msg.sender].lastActionVia, "Not your turn");
         _;
     }
 
@@ -49,32 +59,31 @@ contract Bounty{
 
     function submitVuln(bytes4 CCVE, bytes ipfsSubmission) public {
         // sender can only submit one vulnerablity at a time
-        //require(test() == false);
-        //require(msg.sender != owner); //@info owner cant submit bounty to themselfs
+        require(checkForCurrentSubmit() == false, "submission alrady pinding for address");
+        require(msg.sender != owner, "Owner cant submit bounty to themselfs");
         require(lock == false, "require lock == false error");
         mappingAddressToStruct[msg.sender].submitter = msg.sender;
+        mappingAddressToStruct[msg.sender].lastActionVia = msg.sender;
         mappingAddressToStruct[msg.sender].stage = submit;
         mappingAddressToStruct[msg.sender].CCVE = CCVE;
         mappingAddressToStruct[msg.sender].ipfsSubmission = ipfsSubmission;
         mappingAddressToStruct[msg.sender].index = SubmissionArray.push(msg.sender)-1;
     }
 
-    function acceptVuln(address submitter) public {
-        require(msg.sender == owner, "You are not the owner");
-        require(mappingAddressToStruct[msg.sender].stage != accept, "You are not the owner");
+    function acceptVuln(address submitter) public party turn {
+        require(mappingAddressToStruct[msg.sender].stage != accept, "alrady accepted");
         mappingAddressToStruct[submitter].stage = accept;
         // continue to payout
     }
 
 
-    //@DEV impliment when i have more wallet addresses to test with
-    //function test() public view returns(bool) {
-    //    if (mappingAddressToStruct[msg.sender].submitter == msg.sender) {
-    //        return(true);
-    //    } else {
-    //        return(false);
-    //    }
-    //}
+    function checkForCurrentSubmit() public view returns(bool) {
+        if (mappingAddressToStruct[msg.sender].submitter == msg.sender) {
+            return(true);
+        } else {
+            return(false);
+        }
+    }
 
 
 
@@ -86,8 +95,6 @@ contract Bounty{
     // function toggleSubmitLock() public onlyOwner {
     //     lock = !lock; //@dev toggle for submitions
     // }
-
-
 
     //@debug
     function arraylength() public view returns(uint) {
