@@ -5,13 +5,17 @@ import { CURRENT_BOUNTY_FULFILLED,
     CURRENT_BOUNTY_PENDING,
     CURRENT_BOUNTY_CLEANUP,
     ACCEPT_VULN_FULFILLED,
-    CHECK_BOUNTY_OWNER_STATE_FULFILLED} from '../redux_actions/action_bountyCurrent.js'
+    CHECK_BOUNTY_OWNER_STATE_FULFILLED,
+    BOUNTY_OWNER_STATE_SELECT} from '../redux_actions/action_bountyCurrent.js'
 
 const initialState = {
     bountyCurrent: {},
     bountySubmissionState: {},
     bountySubmissionOwnerState: {},
+    bountyOwnerStateSelect: null,
     bountyLoaded: false,
+    ownerStateLoaded: false,
+    allDataLoaded: false,
     isOwner: false,
     bountySubmission: false,
     promisePending: false
@@ -47,7 +51,13 @@ export function bountyCurrentReducer(state = initialState, action) {
     case CHECK_BOUNTY_OWNER_STATE_FULFILLED:
         return {
             ...state,
-            bountySubmissionOwnerState: payload
+            bountySubmissionOwnerState: payload,
+            ownerStateLoaded: true
+        }
+    case BOUNTY_OWNER_STATE_SELECT:
+        return {
+            ...state,
+            bountyOwnerStateSelect: payload
         }
     case ACCEPT_VULN_FULFILLED:
         return {

@@ -25,14 +25,14 @@ class SubNav extends Component {
         const cureWalletAddress = this.props.ethereumWallet.walletAddress
 
         const { bountysList, bountysLoaded } = this.props.bountysList
-        const { bountyCurrent, bountyLoaded } = this.props.bountyCurrent
+        const { bountyLoaded } = this.props.bountyCurrent
         const bountyAddress = this.props.match.params.id
+        // @dev I think i can now replace theas two if statments with just one.
         if (!bountyLoaded && bountysLoaded && this.props.bountyCurrent.promisePending !== true) { // @dev should only be true if a refresh or direct navigation to the displayBounty.js component
             // @dev otherwise preporations for rendering are handled in componentDidMount
-            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress]) // @dev bountyCurrentAction also sets the isOwner state
+            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
         }
         if (bountyLoaded && prevWalletAddress !== cureWalletAddress) { // @dev if wallet address changes check if owner again
-            console.log(bountyCurrent)
             // this.props.checkOwnerAction(cureWalletAddress, bountyCurrent.owner)
             // this.props.checkBountyStateAction(cureWalletAddress, bountyCurrent.address)
             this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
@@ -44,7 +44,6 @@ class SubNav extends Component {
     }
 
     render() {
-        console.log(this.props.bountyCurrent.isOwner)
         // @dev was getting flicker when trying to load the proper subnav tabs and if else statmens were the only way i was able to fix.
         if (!this.props.bountyCurrent.isOwner && !this.props.bountyCurrent.bountySubmission) {
             return (
@@ -96,7 +95,6 @@ const mapActionsToProps = {
     checkOwnerAction,
     walletAddressAction,
     currentBountCleanupAction
-
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(SubNav)

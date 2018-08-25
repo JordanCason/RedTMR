@@ -12,18 +12,15 @@ export function bountyCurrentAction(bountyAddress, bountyInfo) {
     return {
         type: CURRENT_BOUNTY,
         payload: new Promise((resolve, reject) => {
-            // console.log(bountyInfo)
             bountyInfo.address = bountyAddress
             web3.eth.getBalance(bountyAddress).then(balance => {
                 balance = web3.utils.fromWei(balance, 'ether')
                 bountyInfo.balance = balance
                 store.dispatch(checkOwnerAction(bountyInfo.owner, this.ethereumWallet.walletAddress)).then(result => {
-                    console.log(result)
-                    if (!result.value) {
+                    if (!result.action.payload) {
                         store.dispatch(checkBountyStateHackerAction(this.ethereumWallet.walletAddress, bountyAddress))
                         resolve(bountyInfo)
-                    } else if (result.value) {
-                        console.log('owner Check')
+                    } else if (result.action.payload) {
                         store.dispatch(checkBountyOwnerStateAction(bountyAddress))
                         resolve(bountyInfo)
                     } else {
@@ -35,6 +32,8 @@ export function bountyCurrentAction(bountyAddress, bountyInfo) {
     }
 }
 
+
+
 export const CHECK_OWNER = 'CHECK_OWNER'
 export const CHECK_OWNER_FULFILLED = 'CHECK_OWNER_FULFILLED'
 export const checkOwnerAction = (cureWalletAddress, bountyCurrent) => {
@@ -42,7 +41,6 @@ export const checkOwnerAction = (cureWalletAddress, bountyCurrent) => {
         type: CHECK_OWNER,
         payload: new Promise((resolve, reject) => {
             let payload
-            console.log(`%c ${cureWalletAddress} = ${bountyCurrent}`, `color:blue`)
             if (bountyCurrent === cureWalletAddress) {
                 payload = true
             } else {
@@ -87,31 +85,46 @@ export const checkBountyOwnerStateAction = (bountyAddress) => {
             let ownerSubmissionsArray = {}
             // @dev arraylength is the amount of submited vulnerablitys in the contract
             bountyContract.methods.arraylength().call().then(result => {
-                for (let i = 1; i < parseInt(result, 10) + 1; i++) {
+                result = parseInt(result, 10)
+                let count = 0
+                for (let i = 1; i < result + 1; i++) {
                     // @dev submissionArray holds the address to each submited vulnerablity
                     bountyContract.methods.SubmissionArray(i).call().then(address => {
                         // @dev get the ipfs link and remaning contract information
-                        bountyContract.methods.mappingAddressToStruct(address).call().then(result => {
+                        bountyContract.methods.mappingAddressToStruct(address).call().then(data => {
                             let submission = {}
-                            submission.ipfsSubmission = web3.utils.hexToUtf8(result.ipfsSubmission)
-                            submission.lastActionBy = result.lastActionBy
-                            submission.stage = result.stage
-                            submission.submitter = result.submitter
+                            submission.ipfsSubmission = web3.utils.hexToUtf8(data.ipfsSubmission)
+                            submission.lastActionBy = data.lastActionBy
+                            submission.stage = data.stage
+                            submission.submitter = data.submitter
                             ipfs.catJSON(submission.ipfsSubmission, (err, ipfsresult) => {
-                                console.log('here')
+                                count += 1
                                 submission = {
                                     ...submission,
                                     ...ipfsresult
                                 }
                                 console.log(submission)
                                 ownerSubmissionsArray[i] = submission
+                                if (count === result) {
+                                    resolve(ownerSubmissionsArray)
+                                }
                             })
                         })
                     })
                 }
             })
-            resolve(ownerSubmissionsArray)
         })
+    }
+}
+
+
+export const BOUNTY_OWNER_STATE_SELECT = 'BOUNTY_OWNER_STATE_SELECT'
+export const BOUNTY_OWNER_STATE_SELECT_FULFILLED = 'BOUNTY_OWNER_STATE_SELECT_FULFILLED'
+
+export const bountyOwnerStateSelectAction = (index) => {
+    return {
+        type: BOUNTY_OWNER_STATE_SELECT,
+        payload: index
     }
 }
 
@@ -130,15 +143,20 @@ export function currentBountCleanupAction(name, value) {
 export const ACCEPT_VULN = 'ACCEPT_VULN'
 export const ACCEPT_VULN_FULFILLED = 'ACCEPT_VULN_FULFILLED'
 
-export const acceptVulnAction = (bountyAddress) => {
-    console.log(bountyAddress)
+export const acceptVulnAction = (walletAddress, bountyAddress, bountySubmitter) => {
+    console.log(`walletAddress = ${walletAddress}| bountyAddress = ${bountyAddress}| bountySubmitter = ${bountySubmitter}`)
     return {
         type: ACCEPT_VULN,
         payload: new Promise((resolve, reject) => {
             console.log('vulnerablity')
             const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
-            bountyContract.methods.acceptVuln().call().then(result => {
+            const transaction = {
+                from: walletAddress,
+                gas: 3000000
+            }
+            bountyContract.methods.acceptVuln(bountySubmitter).send(transaction).then((result, err) => {
                 console.log(result)
+                console.log(err)
                 resolve(result)
             })
         })
