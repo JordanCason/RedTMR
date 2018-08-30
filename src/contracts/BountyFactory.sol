@@ -1,5 +1,5 @@
 
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.24;
 import "./Bounty.sol";
 
 contract BountyFactory {
@@ -13,7 +13,7 @@ contract BountyFactory {
         owner = msg.sender;
     }
 
-    function createBounty(string ipfs) public payable returns(address) {
+    function createBounty(bytes32 ipfs) public payable returns(address) {
         require(msg.value == 0.01 ether, "Fucntion Requires 0.01ETH");
         Bounty newbounty = (new Bounty).value(msg.value)(bountyArray.length, msg.sender, ipfs);
         bountyArray.push(newbounty);

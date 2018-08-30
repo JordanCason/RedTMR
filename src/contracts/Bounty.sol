@@ -1,9 +1,10 @@
-pragma solidity ^0.4.22;
+pragma solidity ^0.4.24;
+pragma experimental ABIEncoderV2;
 
 contract Bounty{
     uint index;
     address owner;
-    string ipfs;
+    bytes32 ipfs;
     bool lock;
     bool votingEligible;
     bytes1 submit = 0x01;
@@ -12,23 +13,30 @@ contract Bounty{
     bytes1 change = 0x04;
     bytes1 vote   = 0x05;
 
+    struct message {
+        bytes1 action;
+        address msgSender;
+        bytes32 ipfsMsg;
+    }
+
 
     struct bountyStage {
         uint index;
         address submitter;
         bytes1 stage;
         bytes4 CCVE;
-        bytes ipfsSubmission;
+        bytes32 ipfsSubmission;
         address lastActionVia;
+        message[] messages;
     }
 
     mapping (address => bountyStage) public mappingAddressToStruct;
     address[] public SubmissionArray = [0x00]; //@dev init submissionArray[0] with 0x00 to keep numbers aligned
 
-    constructor(uint _index, address _sender, string _ipfs) public payable {    //@Update change ipfs to bytes
+    constructor(uint _index, address _sender, bytes32 _ipfs) public payable {    //@Update change ipfs to bytes
         lock = false;
         index = _index;             //@Dev BountyFactory array position
-        owner = _sender;            //@dev msg.sender pass through from BountyFactory
+        owner = _sender;            //@dev msg.sender pass through from BountyFactory // use tx.origin (address): sender of the transaction (full call chain)
         ipfs = _ipfs;
     }
 
@@ -37,13 +45,13 @@ contract Bounty{
         _;
     }
 
-    modifier party() {
+    modifier party(address submitter) {
         require(msg.sender == owner || msg.sender == mappingAddressToStruct[msg.sender].submitter, "you are not a party to this contract");
         _;
     }
 
-    modifier turn() {
-        require(msg.sender != mappingAddressToStruct[msg.sender].lastActionVia, "Not your turn");
+    modifier turn(address submitter) {
+        require(msg.sender != mappingAddressToStruct[submitter].lastActionVia, "Not your turn");
         _;
     }
 
@@ -57,7 +65,7 @@ contract Bounty{
 
 
 
-    function submitVuln(bytes4 CCVE, bytes ipfsSubmission) public {
+    function submitVuln(bytes4 CCVE, bytes32 ipfsSubmission) public {
         // sender can only submit one vulnerablity at a time
         require(checkForCurrentSubmit() == false, "submission alrady pinding for address");
         require(msg.sender != owner, "Owner cant submit bounty to themselfs");
@@ -70,9 +78,18 @@ contract Bounty{
         mappingAddressToStruct[msg.sender].index = SubmissionArray.push(msg.sender)-1;
     }
 
-    function acceptVuln(address submitter) public party turn {
+    function acceptVuln(address submitter) public party(submitter) turn(submitter) {
         require(mappingAddressToStruct[msg.sender].stage != accept, "alrady accepted");
         mappingAddressToStruct[submitter].stage = accept;
+        mappingAddressToStruct[submitter].lastActionVia = msg.sender;
+        // continue to payout
+    }
+
+    function denyVuln(address submitter, bytes32 ipfsMsg) public party(submitter) turn(submitter) {
+        require(mappingAddressToStruct[msg.sender].stage != accept, "alrady accepted");
+        mappingAddressToStruct[submitter].messages.push(message(deny, msg.sender, ipfsMsg));
+        mappingAddressToStruct[submitter].stage = deny;
+        mappingAddressToStruct[submitter].lastActionVia = msg.sender;
         // continue to payout
     }
 
@@ -83,6 +100,18 @@ contract Bounty{
         } else {
             return(false);
         }
+    }
+
+    function getterMessages1(address submitter) public view returns(uint) {
+        return mappingAddressToStruct[submitter].messages.length;
+    }
+
+    function getterMessages2(address submitter) public view returns(message) {
+        return mappingAddressToStruct[submitter].messages[0];
+    }
+
+    function getterMessages3(address submitter) public view returns(message) {
+        return mappingAddressToStruct[submitter].messages[1];
     }
 
 
@@ -102,7 +131,7 @@ contract Bounty{
     }
 
     //@debug
-    function  ownerInfo() public view returns(uint, address, string) {
+    function  ownerInfo() public view returns(uint, address, bytes32) {
         return (index, owner, ipfs);
     }
 
