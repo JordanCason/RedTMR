@@ -3,100 +3,143 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 // redux
-import { acceptVulnAction } from '../../redux_actions/action_bountyCurrent.js'
+import { acceptVulnAction, bountyOwnerStateSelectAction } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
-    handleSubmit = (e) => {}
     // @DEVEND
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.bountyCurrent.bountySubmission) {
+            return (true)
+        } else {
+            return (false)
+        }
+    }
+
     render = () => {
-        return (<DisplayBountyStyle>
+        return (<DisplayOwnerStyle>
             <div className="container-2">
                 <div className="column-1"></div>
                 <div className="column-2">
                     <div className="container-3">
                         <div className="container-3_column-1 shadowborder">
-                            <div>
-                                <legend>Upload photo</legend>
-                                {/* <img src={bountyCurrent.uploadImg} alt=''/> */}
+                            <div className='tableContainer'>
+                                <p></p>
+                                <table className='tableHead'>
+                                    <thead>
+                                        <tr>
+                                            <th>CVE Score</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                {this.props.bountyCurrent.bountySubmission
+                                    ? <table className='CVETable'>
+                                        <tbody>
+                                            <tr valign="middle">
+                                                <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionState.CVSSData.environmental.severity}`}
+                                                    rowSpan="3">{this.props.bountyCurrent.bountySubmissionState.CVSSData.environmental.score}</td>
+                                                <td className='trTitle'><b>Stage: </b></td>
+                                                <td>{this.props.bountyCurrent.bountySubmissionState.stage}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className='trTitle'><b>weakness: </b></td>
+                                                <td>{this.props.bountyCurrent.bountySubmissionState.attackSurface.weakness}</td>
+                                            </tr>
+                                            <tr>
+                                                <td className='trTitle'><b>Attack: </b></td>
+                                                <td>{this.props.bountyCurrent.bountySubmissionState.attackSurface.weakness}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    : <div></div>
+                                }
                             </div>
-                            <div>
-                                <div className='body'>
-                                    <div className="timeline">
-                                        <div className="container active">
-                                            <div>
-                                                <h2>18/12/18 12:45PM</h2>
-                                                <p>Bounty Has been submited</p>
-                                            </div>
-                                        </div>
-                                        <div className="container">
-                                            <div>
-                                                <h2>2016</h2>
-                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, </p>
-                                            </div>
-                                        </div>
-                                        <div className="container">
-                                            <div>
-                                                <h2>2015</h2>
-                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
-                                            </div>
-                                        </div>
-                                        <div className="container">
-                                            <div>
-                                                <h2>2012</h2>
-                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
-                                            </div>
-                                        </div>
-                                        <div className="container">
-                                            <div>
-                                                <h2>2011</h2>
-                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
-                                            </div>
-                                        </div>
-                                        <div className="container">
-                                            <div>
-                                                <h2>2007</h2>
-                                                <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <br/><br/><br/>
-                                <br/><br/>
-                            </div>
                         </div>
                         <div className="container-3_column-2 shadowborder">
                             <div>
-                                {console.log(this.props.bountyCurrent)}
-                                OwnerAddress: {this.props.bountyCurrent.bountyCurrent.owner}<br/>
-                                Submmiter: {this.props.bountyCurrent.bountySubmissionState.submitter}<br/>
-                                BountyStage: {this.props.bountyCurrent.bountySubmissionState.stage}<br/>
-                                LastActionBy: {this.props.bountyCurrent.bountySubmissionState.lastActionBy}<br/>
+                                <button type="button" onClick={() => { '' }}>accept Vulnerablity</button>
+                                <button type="button" onClick={() => { console.log(this.props.bountyCurrent) }}>console.log</button>
                             </div>
-                            <button type="button" onClick={() => { this.props.acceptVulnAction(this.props.bountyCurrent.bountyCurrent.address) }}>accept Vulnerablity</button>
+
+
                         </div>
                     </div>
                 </div>
                 <div className="column-3"></div>
             </div>
             <div className='footer'></div>
-        </DisplayBountyStyle>)
+        </DisplayOwnerStyle>)
     }
 }
 
 const mapStateToProps = state => ({
-    bountyCurrent: state.bountyCurrent
+    bountyCurrent: state.bountyCurrent,
+    ethereumWallet: state.ethereumWallet
 })
 
 const mapActionsToProps = {
-    acceptVulnAction
+    acceptVulnAction,
+    bountyOwnerStateSelectAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)
 
-const DisplayBountyStyle = styled.div`
+const DisplayOwnerStyle = styled.div`
 height: auto;
+
+.tableContainer{
+
+    display: flex;
+    flex-direction: column;
+
+}
+table {
+    width: 100%;
+}
+.tableHead{
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.CVETable:hover {
+    background-color:#f6f5f5;
+    cursor: pointer;
+}
+
+.trTitle {
+    padding-left: 5px;
+    width: 85px;
+}
+
+.CVEScore {
+    width: 63px;
+    vertical-align : middle;
+    text-align:center;
+    font-weight: bold;
+    font-size: 200%;
+
+}
+
+td {
+    white-space: nowrap;
+}
+
+.spaceing {
+    content: "\00a0";
+    height: 2px;
+    background-color: #e5e5e5;
+}
+
+.scoreRating.none     { background:#53aa33;  }
+.scoreRating.low      { background:#ffcb0d;  }
+.scoreRating.medium   { background:#f9a009;  }
+.scoreRating.high     { background:#df3d03;  }
+.scoreRating.critical { background:#cc0500;  }
+
+
+
 
 
 
@@ -188,16 +231,6 @@ height: auto;
 }
 
 
-
-
-
-
-
-
-
-
-
-
     .container-1 {
         display: flex;
         flex-direction: column;
@@ -241,6 +274,7 @@ height: auto;
             flex-basis: 25%;
             padding:10px;
             background-color: white;
+            min-height: 800px;
 
         }
         .container-3_column-2 {
@@ -256,17 +290,8 @@ height: auto;
         box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2), 0 4px 20px 0 rgba(0,0,0,0.19);
     }
 
-    .changeLater {
-        max-width: 350px;
-        background-color: white;
-    }
 
 
-
-    #Bountytextarea{
-        min-width: 100%;
-        min-height: 400px
-    }
 
     .profileImg{
         width: 300px
@@ -279,150 +304,11 @@ height: auto;
 
     }
 
-    #tempParagraph{
-        margin-top: 10px;
-    }
-
-    #bodyHeader {
-     margin-top: 20px;
-    }
-
     .footer{
         content: "\00a0";
         height: 150px;
 
     }
 
-
-.md-preview {
-     padding: 10px;
-     font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
-}
-     .md-preview p, .md-preview blockquote, .md-preview ol , .md-preview dl, .md-preview table, .md-preview pre {
-         margin-top: 0;
-         margin-bottom: 16px;
-    }
-     .md-preview h1, .md-preview h2, .md-preview h3 {
-         margin-top: 24px;
-         margin-bottom: 16px;
-         font-weight: 600;
-         line-height: 1.25;
-         padding-bottom: 0.3em;
-    }
-     .md-preview h1 {
-         font-size: 1.6em;
-    }
-     .md-preview h2 {
-         font-size: 1.4em;
-    }
-     .md-preview h3 {
-         font-size: 1.2em;
-    }
-     .md-preview ul, .md-preview ol {
-         padding-left: 2em;
-    }
-     .md-preview blockquote {
-         margin-left: 0;
-         padding: 0 1em;
-         color: #777;
-         border-left: 0.25em solid #ddd;
-    }
-     .md-preview blockquote > :first-child {
-         margin-top: 0;
-    }
-     .md-preview blockquote > :last-child {
-         margin-bottom: 0;
-    }
-     .md-preview code {
-         padding: 0.2em 0 0.2em 0;
-         margin: 0;
-         font-size: 16px;
-         background-color: rgba(0, 0, 0, 0.04);
-         border-radius: 3px;
-    }
-     .md-preview code::before, .md-preview code::after {
-         letter-spacing: -0.2em;
-         content: "\00a0";
-    }
-     .md-preview pre {
-         display: inline-block
-         padding: 16px;
-         overflow: auto;
-
-         line-height: 1.45;
-         background-color: #f8f8f8;
-         border: 1px solid #ccc;
-         font-family: monospace;
-         border-radius: 3px;
-         width: auto;
-    }
-     .md-preview pre code {
-         display: inline;
-         padding: 0;
-         margin: 0;
-         line-height: inherit;
-         word-wrap: normal;
-         border: 0;
-    }
-     .md-preview pre code::before, .md-preview pre code::after {
-         content: none;
-    }
-     .md-preview pre > code {
-         padding: 0;
-         margin: 0;
-         font-size: 100%;
-         word-break: normal;
-         white-space: pre;
-         background: transparent;
-         border: 0;
-    }
-     .md-preview a {
-         text-decoration: none;
-         color: #4078c0;
-    }
-     .md-preview a:hover {
-         text-decoration: underline;
-    }
-     .md-preview > *:first-child {
-         margin-top: 0 !important;
-    }
-     .md-preview > *:last-child {
-         margin-bottom: 0 !important;
-    }
-     .md-preview::after {
-         display: table;
-         clear: both;
-         content: "";
-    }
-     .md-preview table {
-         display: block;
-         width: 100%;
-         border-spacing: 0;
-         border-collapse: collapse;
-    }
-     .md-preview table thead th {
-         font-weight: bold;
-    }
-     .md-preview table th, .md-preview table td {
-         padding: 6px 13px;
-         border: 1px solid #c8ccd0;
-    }
-    .md-preview table tr:nth-child(2n) {
-      background: #f6f8fa;
-    }
-    .md-preview tr {
-        border-top: 1px solid #c6cbd1;
-        background: #fff;
-    }
-    .md-preview li {
-        list-style: disc;
-        margin: 0 0 2px;
-        padding: 0 0 0 15px;
-    }
-    .md-preview ol {
-        list-style: circle;
-        margin: 0 0 2px;
-        padding: 0 0 0 15px;
-    }
 
 `

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 // redux
-import { acceptVulnAction, bountyOwnerStateSelectAction } from '../../redux_actions/action_bountyCurrent.js'
+import { acceptVulnAction, bountyOwnerStateSelectAction, denyVulnAction, testAction2 } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
     // @DEVEND
@@ -16,7 +16,15 @@ class DisplayBounty extends Component {
         }
     }
 
+    handleclick() {
+        // web3.bzz.upload('test file').then(function(hash) {
+        //     console.log(hash)
+        // })
+        //
+    }
+
     render = () => {
+        const ipfsmessage = 'this is a test ipfs message'
         let index = this.props.bountyCurrent.bountyOwnerStateSelect
         return (<DisplayOwnerStyle>
             <div className="container-2">
@@ -82,8 +90,11 @@ class DisplayBounty extends Component {
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="button" test={console.log(this.props.bountyCurrent.bountyCurrent.address)} onClick={() => { acceptVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionOwnerState[index].submitter) }}>accept Vulnerablity</button>
+                            <button type="button" onClick={() => { acceptVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionOwnerState[index].submitter) }}>accept Vulnerablity</button>
+                            <button type="button" onClick={() => { this.props.denyVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionOwnerState[index].submitter, ipfsmessage) }}>deny Vulnerablity</button>
+                            <button type="button" onClick={() => { this.props.testAction2() }}>test</button>
                             <button type="button" onClick={() => { console.log(this.props.bountyCurrent) }}>console.log</button>
+                            <button type="button" onClick={() => { this.handleclick() }}>bzz</button>
                             </div>
                                 : <p>hello2</p>}</div>
 
@@ -105,7 +116,9 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
     acceptVulnAction,
-    bountyOwnerStateSelectAction
+    bountyOwnerStateSelectAction,
+    denyVulnAction,
+    testAction2
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)
