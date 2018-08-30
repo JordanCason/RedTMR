@@ -125,17 +125,19 @@ class SubmitVuln extends Component {
         }
         // @DEV (submit Vulnerability) add data to ipfs and push cve score and ipfs hash to blockchain
         ipfs.addJSON(vulnData, (err, result) => {
-            ipfsHashToast(result)
-            const bountycontract = new web3.eth.Contract(bountyabi, this.props.bountyCurrent.bountyCurrent.address)
-            bountycontract.methods.submitVuln(vulnData.CVSSData.environmental.score.hexEncode(), web3.utils.toHex(result)).send(transaction)
-                .on('transactionHash', function (hash) {
-                    console.log(hash)
-                })
-                .on('receipt', function (receipt) {
-                    console.log(receipt)
-                })
-            ipfs.catJSON(result, (err, ipfsresult) => {
-                console.log(ipfsresult)
+            ipfs.base58ToHex(result).then((result) => {
+                ipfsHashToast(result)
+                const bountycontract = new web3.eth.Contract(bountyabi, this.props.bountyCurrent.bountyCurrent.address)
+                bountycontract.methods.submitVuln(vulnData.CVSSData.environmental.score.hexEncode(), result).send(transaction)
+                    .on('transactionHash', function (hash) {
+                        console.log(hash)
+                    })
+                    .on('receipt', function (receipt) {
+                        console.log(receipt)
+                    })
+                // ipfs.catJSON(result, (err, ipfsresult) => {
+                //     console.log(ipfsresult)
+                // })
             })
         })
     }

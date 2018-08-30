@@ -22,17 +22,19 @@ export function bountysListAction() {
                     myContract.methods.bountyArray(i).call().then(bountyContractAddress => {
                         let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
                         bountyContract.methods.ownerInfo().call().then(result => {
-                            ipfs.catJSON(result[2], (err, ipfsresult) => {
-                                ipfsresult.owner = result[1]
-                                // console.log("action")
-                                // console.log(result)
-                                // console.log(ipfsresult)
-                                web3.eth.getBalance(bountyContractAddress).then(balance => {
-                                    ipfsresult.balance = web3.utils.fromWei(balance, 'ether')
-                                    contractDict[bountyContractAddress] = ipfsresult
-                                    if (Object.keys(contractDict).length === contracts) {
-                                        resolve(contractDict)
-                                    }
+                            ipfs.hexToBase58(result[2]).then((encodedResult) => {
+                                ipfs.catJSON(encodedResult, (err, ipfsresult) => {
+                                    ipfsresult.owner = result[1]
+                                    // console.log("action")
+                                    // console.log(result)
+                                    // console.log(ipfsresult)
+                                    web3.eth.getBalance(bountyContractAddress).then(balance => {
+                                        ipfsresult.balance = web3.utils.fromWei(balance, 'ether')
+                                        contractDict[bountyContractAddress] = ipfsresult
+                                        if (Object.keys(contractDict).length === contracts) {
+                                            resolve(contractDict)
+                                        }
+                                    })
                                 })
                             })
                         })

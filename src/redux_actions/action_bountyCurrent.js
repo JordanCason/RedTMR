@@ -62,13 +62,29 @@ export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
             const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
             bountyContract.methods.mappingAddressToStruct(walletAddress).call().then(result => {
                 let payload = {}
-                payload.CCVE = result.CCVE
-                payload.ipfsSubmission = result.ipfsSubmission
-                payload.lastActionBy = result.lastActionBy
-                payload.stage = result.stage
-                payload.submitter = result.submitter
+                let hackerSubmission = {}
                 payload.bountySubmission = result.submitter !== '0x0000000000000000000000000000000000000000'
-                resolve(payload)
+                if (payload.bountySubmission) {
+                    payload.CCVE = result.CCVE
+                    payload.ipfsSubmission = result.ipfsSubmission
+                    payload.lastActionBy = result.lastActionVia
+                    payload.stage = result.stage
+                    payload.submitter = result.submitter
+                    let submission = {}
+                    ipfs.hexToBase58(payload.ipfsSubmission).then((data) => {
+                        ipfs.catJSON(data, (err, ipfsresult) => {
+                            submission = {
+                                ...payload,
+                                ...ipfsresult
+                            }
+                            hackerSubmission = submission
+                            resolve(hackerSubmission)
+                        })
+                    })
+                } else {
+                    hackerSubmission = payload
+                    resolve(payload)
+                }
             })
         })
     }
@@ -93,21 +109,22 @@ export const checkBountyOwnerStateAction = (bountyAddress) => {
                         // @dev get the ipfs link and remaning contract information
                         bountyContract.methods.mappingAddressToStruct(address).call().then(data => {
                             let submission = {}
-                            submission.ipfsSubmission = web3.utils.hexToUtf8(data.ipfsSubmission)
-                            submission.lastActionBy = data.lastActionBy
+                            submission.ipfsSubmission = data.ipfsSubmission
+                            submission.lastActionBy = data.lastActionVia
                             submission.stage = data.stage
                             submission.submitter = data.submitter
-                            ipfs.catJSON(submission.ipfsSubmission, (err, ipfsresult) => {
-                                count += 1
-                                submission = {
-                                    ...submission,
-                                    ...ipfsresult
-                                }
-                                console.log(submission)
-                                ownerSubmissionsArray[i] = submission
-                                if (count === result) {
-                                    resolve(ownerSubmissionsArray)
-                                }
+                            ipfs.hexToBase58(submission.ipfsSubmission).then((data) => {
+                                ipfs.catJSON(data, (err, ipfsresult) => {
+                                    count += 1
+                                    submission = {
+                                        ...submission,
+                                        ...ipfsresult
+                                    }
+                                    ownerSubmissionsArray[i] = submission
+                                    if (count === result) {
+                                        resolve(ownerSubmissionsArray)
+                                    }
+                                })
                             })
                         })
                     })
@@ -132,6 +149,7 @@ export const bountyOwnerStateSelectAction = (index) => {
 export const CURRENT_BOUNTY_CLEANUP = 'CURRENT_BOUNTY_CLEANUP'
 
 export function currentBountCleanupAction(name, value) {
+    console.trace()
     return {
         type: CURRENT_BOUNTY_CLEANUP,
         payload: ''
@@ -163,14 +181,58 @@ export const acceptVulnAction = (walletAddress, bountyAddress, bountySubmitter) 
     }
 }
 
+export const DENY_VULN = 'ACCEPT_VULN'
+export const DENY_VULN_FULFILLED = 'ACCEPT_VULN_FULFILLED'
+
+export const denyVulnAction = (walletAddress, bountyAddress, bountySubmitter, msg) => {
+    return {
+        type: DENY_VULN,
+        payload: new Promise((resolve, reject) => {
+            const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
+            const transaction = {
+                from: walletAddress,
+                gas: 3000000
+            }
+            ipfs.addJSON({ msg: msg }, (err, ipfsHash) => {
+                bountyContract.methods.denyVuln(bountySubmitter, web3.utils.toHex(ipfsHash)).send(transaction).then((result, err) => {
+                    console.log(result)
+                })
+            })
+        })
+    }
+}
+
+
+
+//
+// export const testAction = (bountyAddress, bountySubmitter) => {
+//     return {
+//         type: 'TEST',
+//         payload: new Promise((resolve, reject) => {
+//             const bountyContract = new web3.eth.Contract(bountyabi, bountyAddress)
+//             console.log('here')
+//             bountyContract.methods.getterMessages3(bountySubmitter).call().then(data => {
+//                 console.log(data)
+//                 resolve(data)
+//             })
+//         })
+//     }
+// }
 
 
 
 
-
-
-
-
+export const testAction2 = () => {
+    return {
+        type: 'TEST',
+        payload: new Promise((resolve, reject) => {
+            ipfs.base58ToHex().then((hash) => {
+                console.log(hash)
+                resolve()
+            })
+        })
+    }
+}
 
 
 

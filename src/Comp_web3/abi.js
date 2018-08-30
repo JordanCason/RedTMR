@@ -3,6 +3,7 @@ import {BountyAbi} from '../contracts/abi/BountyAbi'
 console.log('booting')
 console.log(window)
 var Web3 = require('web3')
+// var Bzz = require('web3-bzz')
 
 export var myContract
 export var bountyabi
@@ -14,8 +15,10 @@ if (window.web3) {
     window.web3 = new Web3(window.web3.currentProvider)
     // web3 = new Web3(window.web3.currentProvider);
     web3 = window.web3
+    // web3.bzz.setProvider('http://159.65.232.230:9000')
 }
 
+// export var bzz = new Bzz('http://159.65.232.230:9000')
 // If the browser has injected Web3.js
 
 // if (typeof web3 !== 'undefined') {

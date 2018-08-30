@@ -6,6 +6,7 @@
   "dependencies": {
     "antd": "^3.6.1",
     "babel-plugin-import": "^1.7.0",
+    "bs58": "^4.0.1",
     "buffer": "^5.1.0",
     "butter-toast": "^2.1.2",
     "codemirror": "^5.38.0",

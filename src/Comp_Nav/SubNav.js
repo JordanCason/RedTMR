@@ -39,9 +39,9 @@ class SubNav extends Component {
         }
     }
 
-    componentWillUnmount() {
-        this.props.currentBountCleanupAction()
-    }
+    // componentWillUnmount() {
+    //     this.props.currentBountCleanupAction()
+    // }
 
     render() {
         // @dev was getting flicker when trying to load the proper subnav tabs and if else statmens were the only way i was able to fix.

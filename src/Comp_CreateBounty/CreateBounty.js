@@ -44,27 +44,29 @@ class CreateBounty extends Component {
             minEth: minEth,
             Bountytextarea: Bountytextarea
         }, (err, result) => {
-            ipfsHashToast(result)
-            // @dev upload IPFS address to smart contract
-            // console.log(`submitted form data pushed to IPFS at http://159.65.232.230/ipfs/${result}`)
-            myContract.methods.createBounty(result).send({
-                from: walletAddress,
-                gas: 3000000,
-                value: web3.utils.toWei(initDeposit, 'ether')
-            }).on('transactionHash', function(hash) {
-                depositEthToast(hash)
-            }).on('receipt', (receipt) => {
-                let bountyContractAddress = receipt.events.returnBounty.returnValues[0]
-                let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
-                bountyContract.methods.ownerInfo().call().then(function(result) {
-                    console.log(`contract info: `, result)
+            ipfs.base58ToHex(result).then((result) => {
+                ipfsHashToast(result)
+                // @dev upload IPFS address to smart contract
+                // console.log(`submitted form data pushed to IPFS at http://159.65.232.230/ipfs/${result}`)
+                myContract.methods.createBounty(result).send({
+                    from: walletAddress,
+                    gas: 3000000,
+                    value: web3.utils.toWei(initDeposit, 'ether')
+                }).on('transactionHash', function(hash) {
+                    depositEthToast(hash)
+                }).on('receipt', (receipt) => {
+                    let bountyContractAddress = receipt.events.returnBounty.returnValues[0]
+                    let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
+                    bountyContract.methods.ownerInfo().call().then(function(result) {
+                        console.log(`contract info: `, result)
+                    })
+
+                    // need to setup a listner to get contract address and display toast
+
+                    // ipfs.catJSON(result, (err, result) => {
+                    //     console.log(`The Retreved IPFS object: `,result);
+                    // });
                 })
-
-                // need to setup a listner to get contract address and display toast
-
-                // ipfs.catJSON(result, (err, result) => {
-                //     console.log(`The Retreved IPFS object: `,result);
-                // });
             })
         })
     };
