@@ -2,8 +2,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bountysListAction } from './redux_actions/action_bountysList'
-// import { web3 } from './Comp_web3/abi.js'
-// import styled from 'styled-components'
 import styled from 'styled-components'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Navigation from './Comp_Nav/Nav'
@@ -15,7 +13,7 @@ import DisplayBounty from './Comp_DisplayBounty/DisplayBounty'
 import SubmitVuln from './Comp_SubmitVuln/SubmitVuln'
 import HackerWorkflow from './Comp_SubmitVuln/Comp_HackerWorkflow/HackerWorkflow'
 import OwnerWorkflow from './Comp_SubmitVuln/Comp_OwnerWorkflow/OwnerWorkflow'
-
+import testFunk from './Comp_TestFunk/testFunk'
 // https://github.com/ReactTraining/react-router/blob/master/packages/react-router-dom/docs/guides/quick-start.md
 // https://www.youtube.com/watch?v=3B588JwyT18 A good youtube routing video
 
@@ -46,6 +44,7 @@ class App extends Component {
                   <Route exact path="/Bounty/:id" component={DisplayBounty}/>
                   <Route exact path="/Bounty/:id/ownerWorkflow" component={OwnerWorkflow}/>
                   <Route exact path="/Bounty/:id/hackerWorkflow" component={HackerWorkflow}/>
+                  <Route exact path="/testFunk" component={testFunk}/>
                   <Footer />
               </AppDiv>
           </Router>
