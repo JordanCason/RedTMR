@@ -51,65 +51,42 @@ Your testing must not violate any law, or disrupt or compromise any data that is
 Please contact company@somesite.com to report security incidents such as customer data leakage or breach of infrastructure.`
 
 
+export const markdownInitCreateBounty = `
+![Add an img](https://oracletimes.com/wp-content/uploads/2018/03/Ethereum-Cover.png "ETH")
 
+# Disclosure Policy
 
-const old = `
-<h1>Policy</h1><div><div class="markdownable">Guidelines</strong>
+No technology is perfect, and N/A believes that working with skilled security researchers across the globe is crucial in identifying weaknesses in any technology. If you believe you've found a security issue in our product or service, we encourage you to notify us. We welcome working with you to resolve the issue promptly.
 
-This disclosure program is limited to security vulnerabilities in web applications owned by xxxxx.
+* Let us know as soon as possible upon discovery of a potential security issue, and we'll make every effort to quickly resolve the issue.
+* Provide us a reasonable amount of time to resolve the issue before any disclosure to the public or a third-party.
+* Make a good faith effort to avoid privacy violations, destruction of data, and interruption or degradation of our service. Only interact with accounts you own or with explicit permission of the account holder.
 
-<p><strong>Eligible Vulnerabilities</strong></p>
+# Exclusions
+While researching, we'd like to ask you to refrain from:
+* Denial of service
+* Spamming
+* Social engineering (including phishing) of N/A staff or contractors
+* Any physical attempts against N/A property or data centers
 
-<p>We encourage the coordinated disclosure of the following eligible web application vulnerabilities:  </p>
+Thank you for helping keep N/A and our users safe!
 
-<ul>
-<li>Cross-site scripting
-<li>Cross-site request forgery in a privileged context</li>
-<li>Server-side code execution</li>
-<li>Authentication or authorization flaws</li>
-<li>Injection Vulnerabilities</li>
-<li>Directory Traversal</li>
-<li>Information Disclosure</li>
-<li>Significant Security Misconfiguration</li>
-</ul>
+## Code block
+\`\`\`js
+var React = require('react');
+var Markdown = require('');
 
-<p>please provide us a reasonable amount of time to remediate before publicly disclosing.  When submitting a vulnerability, please provide concise steps to reproduce that are easily understood.   </p>
+React.render(
+  <Markdown source="# " />,
+  document.getElementById('content')
+);
+\`\`\`
 
-<p><strong>Program Exclusions</strong></p>
+## Table
 
-<p>While we encourage any submission affecting the security of an Adobe web property, unless evidence is provided demonstrating exploitability, the following examples are excluded from this program: </p>
+| min/Max | Critical (CVSS 9.0 - 10.0) | High (CVSS 7.0 - 8.9) | Medium (CVSS 4.0 - 6.9) | Low (CVSS 0.0 - 3.9) |
+| ------- | -------------------------- | --------------------- | ----------------------- |--------------------- |
+| Minimum |10 ETH                      |5 ETH                  |2 ETH                    |0.1 ETH               |
+| Maximum |15 ETH                      |8 ETH                  |5 ETH                    |2 ETH                 |
 
-<ul>
-<li>Content spoofing / text injection</li>
-<li>Self-XSS [to be valid, cross-site scripting issues must be exploitable in reflected, stored or DOM-based types]</li>
-<li>Logout and other instances of low-severity Cross-Site Request Forgery </li>
-<li>Cross-site tracing (XST)</li>
-<li>Open redirects with low security impact (exceptions are those cases where the impact is higher such as stealing oauth tokens)</li>
-<li>Missing http security headers </li>
-<li>Missing cookie flags on non-sensitive cookies </li>
-<li>Password and account recovery policies, such as reset link expiration or password complexity</li>
-<li>Invalid or missing SPF (Sender Policy Framework) records (Incomplete or missing SPF/DKIM)</li>
-<li>Vulnerabilities only affecting users of outdated or unpatched browsers and platforms</li>
-<li>SSL/TLS best practices</li>
-<li>Clickjacking/UI redressing with no practical security impact</li>
-<li>Software version disclosure</li>
-<li>Username / email enumeration via Login Page or Forgot Password Page error messages</li>
-<li>Methods to extend product trial periods. </li>
-<li>We are aware that anonymous ftp service is available for ftp.somesite.com.  This server is available for general distribution of various publicly available assets.</li>
-</ul>
-
-<p><strong>Process</strong></p>
-
-<p>Your submission will be reviewed and validated by a member of the Product Security Incident Response Team.  Providing clear and concise steps to reproduce the issue will help to expedite the response.   </p>
-
-<p><strong>Terms and Conditions</strong></p>
-
-<ul>
-<li>Please use your own account for testing or research purposes.  Do not attempt to gain access to another user’s account or confidential information.<br>
-</li>
-<li>Please do not test for spam, social engineering or denial of service issues. </li>
-<li>Your testing must not violate any law, or disrupt or compromise any data that is not your own. </li>
-<li>Please contact <a title="PSIRT@somesite.com" href="mailto:company@somesite.com" rel="nofollow noopener noreferrer">company@somesite.com</a> to report security incidents such as customer data leakage or breach of infrastructure.<br>
-</li>
-</ul>
-</div></div><div class="meta-text padding-15--top"><ul class="list list--inline pull-right"><li><a href="/somesite/policy_versions">View changes</a></li><li><a href="">Notify me of changes</a></li></ul><p class="pull-right padding-15--right"><!-- react-text: 191 -->Last updated on<!-- /react-text --><!-- react-text: 192 --> <!-- /react-text --><!-- react-text: 193 -->April 2, 2018<!-- /react-text --><!-- react-text: 194 -->.<!-- /react-text --><!-- react-text: 195 --> <!-- /react-text --></p><div class="clearfix"></div></div>`
+`

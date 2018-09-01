@@ -8,7 +8,7 @@ export const CURRENT_BOUNTY_FULFILLED = 'CURRENT_BOUNTY_FULFILLED'
 // by the time this action is called we should already have a list of all bountys within the system
 // bountyInfo is a single entry in that list that has been passed to this action
 // bounty address is the address of the bounty we want to set into "this.props.bountyCurrent"
-export function bountyCurrentAction(bountyAddress, bountyInfo) {
+export function bountyCurrentAction(bountyAddress, bountyInfo, wallet) {
     return {
         type: CURRENT_BOUNTY,
         payload: new Promise((resolve, reject) => {
@@ -16,9 +16,10 @@ export function bountyCurrentAction(bountyAddress, bountyInfo) {
             web3.eth.getBalance(bountyAddress).then(balance => {
                 balance = web3.utils.fromWei(balance, 'ether')
                 bountyInfo.balance = balance
-                store.dispatch(checkOwnerAction(bountyInfo.owner, this.ethereumWallet.walletAddress)).then(result => {
+                console.log('here')
+                store.dispatch(checkOwnerAction(bountyInfo.owner, wallet)).then(result => {
                     if (!result.action.payload) {
-                        store.dispatch(checkBountyStateHackerAction(this.ethereumWallet.walletAddress, bountyAddress))
+                        store.dispatch(checkBountyStateHackerAction(wallet, bountyAddress))
                         resolve(bountyInfo)
                     } else if (result.action.payload) {
                         store.dispatch(checkBountyOwnerStateAction(bountyAddress))
@@ -64,7 +65,9 @@ export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
                 let payload = {}
                 let hackerSubmission = {}
                 payload.bountySubmission = result.submitter !== '0x0000000000000000000000000000000000000000'
+                console.log(`%c ${result.submitter ? console.log(true) : console.log(false)} = ${''}`, 'color:blue')
                 if (payload.bountySubmission) {
+                    payload.loaded = true
                     payload.CCVE = result.CCVE
                     payload.ipfsSubmission = result.ipfsSubmission
                     payload.lastActionBy = result.lastActionVia
@@ -82,7 +85,9 @@ export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
                         })
                     })
                 } else {
-                    hackerSubmission = payload
+                    console.log('chacking hacker state')
+                    payload.loaded = false
+                    hackerSubmission = payload // maybe remove reminder
                     resolve(payload)
                 }
             })
@@ -102,32 +107,39 @@ export const checkBountyOwnerStateAction = (bountyAddress) => {
             // @dev arraylength is the amount of submited vulnerablitys in the contract
             bountyContract.methods.arraylength().call().then(result => {
                 result = parseInt(result, 10)
-                let count = 0
-                for (let i = 1; i < result + 1; i++) {
-                    // @dev submissionArray holds the address to each submited vulnerablity
-                    bountyContract.methods.SubmissionArray(i).call().then(address => {
-                        // @dev get the ipfs link and remaning contract information
-                        bountyContract.methods.mappingAddressToStruct(address).call().then(data => {
-                            let submission = {}
-                            submission.ipfsSubmission = data.ipfsSubmission
-                            submission.lastActionBy = data.lastActionVia
-                            submission.stage = data.stage
-                            submission.submitter = data.submitter
-                            ipfs.hexToBase58(submission.ipfsSubmission).then((data) => {
-                                ipfs.catJSON(data, (err, ipfsresult) => {
-                                    count += 1
-                                    submission = {
-                                        ...submission,
-                                        ...ipfsresult
-                                    }
-                                    ownerSubmissionsArray[i] = submission
-                                    if (count === result) {
-                                        resolve(ownerSubmissionsArray)
-                                    }
+                if (!result) {
+                    resolve({
+                        loaded: false
+                    })
+                } else {
+                    let count = 0
+                    for (let i = 1; i < result + 1; i++) {
+                        // @dev submissionArray holds the address to each submited vulnerablity
+                        bountyContract.methods.SubmissionArray(i).call().then(address => {
+                            // @dev get the ipfs link and remaning contract information
+                            bountyContract.methods.mappingAddressToStruct(address).call().then(data => {
+                                let submission = {}
+                                submission.ipfsSubmission = data.ipfsSubmission
+                                submission.lastActionBy = data.lastActionVia
+                                submission.stage = data.stage
+                                submission.submitter = data.submitter
+                                ipfs.hexToBase58(submission.ipfsSubmission).then((data) => {
+                                    ipfs.catJSON(data, (err, ipfsresult) => {
+                                        count += 1
+                                        submission = {
+                                            ...submission,
+                                            ...ipfsresult
+                                        }
+                                        ownerSubmissionsArray[i] = submission
+
+                                        if (count === result) {
+                                            resolve(ownerSubmissionsArray)
+                                        }
+                                    })
                                 })
                             })
                         })
-                    })
+                    }
                 }
             })
         })

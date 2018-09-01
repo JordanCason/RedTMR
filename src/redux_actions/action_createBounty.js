@@ -2,6 +2,7 @@ import {myContract, web3, bountyabi} from '../Comp_web3/abi.js'
 import { store } from '../index.js'
 import {upload, loadimg, ipfs, ipfsHost} from '../Comp_IPFS/Ipfs'
 import faker from 'faker'
+import { markdownInitCreateBounty } from '../Comp_CreateBounty/sampleVDP'
 import {ipfsHashToast, transactionReceiptToast, transactionHashToast} from '../Comp_toast/Toast'
 export const PROFILE_PICTURE = 'PROFILE_PICTURE'
 export const PROFILE_PICTURE_PENDING = 'PROFILE_PICTURE_PENDING'
@@ -53,18 +54,20 @@ export function profilePictureErrAction(err) {
     }
 }
 
+export const GENERATE_PICTURE_FULFILLED = 'GENERATE_PICTURE_FULFILLED'
 export const GENERATE_PICTURE = 'GENERATE_PICTURE'
 export function setPictureLoadedTrueAction(picture) {
-    console.log('generate picture')
-    const payload = {}
-    payload.picture = picture
-    payload.loaded = true
     return {
         type: GENERATE_PICTURE,
-        payload: payload
+        payload: new Promise((resolve, reject) => {
+            console.log('generate picture')
+            const payload = {}
+            payload.picture = picture
+            payload.loaded = true
+            resolve(payload)
+        })
     }
 }
-
 
 export const GENERATE_FORM_DATA_FULFILLED = 'GENERATE_FORM_DATA_FULFILLED'
 export const GENERATE_FORM_DATA = 'GENERATE_FORM_DATA'
@@ -74,15 +77,20 @@ export function generateFormDataAction() {
         payload: new Promise((resolve, reject) => {
             console.log('generateFormDataAction')
             const formFields = {
-                comName: {value: faker.company.companyName()},
-                website: {value: faker.internet.domainName()},
-                comAbout: {value: faker.company.catchPhrase()},
-                secEmail: {value: faker.internet.email()},
-                maxEth: {value: faker.random.number({min: 4, max: 13})},
-                minEth: {value: faker.random.number({min: 1, max: 3})}
+                comName: faker.company.companyName(),
+                website: faker.internet.domainName(),
+                comAbout: faker.company.catchPhrase(),
+                secEmail: faker.internet.email(),
+                maxEth: faker.random.number({min: 4, max: 13}),
+                minEth: faker.random.number({min: 1, max: 3}),
+                Bountytextarea: markdownInitCreateBounty
             }
-            store.dispatch(setPictureLoadedTrueAction(faker.image.avatar()))
-            resolve(formFields)
+            store.dispatch(setPictureLoadedTrueAction(faker.image.avatar())).then((result) => {
+                formFields.uploadImg = result.value.picture
+                formFields.loaded = result.value.loaded
+                console.log(formFields)
+                resolve(formFields)
+            })
         })
     }
 }

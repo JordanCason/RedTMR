@@ -16,7 +16,7 @@ class SubNav extends Component {
         const bountyAddress = this.props.match.params.id // @dev navigation address pram from react router
         if (bountysLoaded && bountyCurrent.address !== bountyAddress) { // @dev If the list of bountys has loaded and the curent bounty informatoin loaded\
             // @dev does not equal the navigation address pram then load the new bounty information
-            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
+            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
         }
     }
 
@@ -30,12 +30,12 @@ class SubNav extends Component {
         // @dev I think i can now replace theas two if statments with just one.
         if (!bountyLoaded && bountysLoaded && this.props.bountyCurrent.promisePending !== true) { // @dev should only be true if a refresh or direct navigation to the displayBounty.js component
             // @dev otherwise preporations for rendering are handled in componentDidMount
-            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
+            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
         }
         if (bountyLoaded && prevWalletAddress !== cureWalletAddress) { // @dev if wallet address changes check if owner again
             // this.props.checkOwnerAction(cureWalletAddress, bountyCurrent.owner)
             // this.props.checkBountyStateAction(cureWalletAddress, bountyCurrent.address)
-            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress])
+            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
         }
     }
 

@@ -1,13 +1,40 @@
 import React, {Component} from 'react'
-import {myContract, web3, bountyabi} from '../Comp_web3/abi.js'
 import styled from 'styled-components'
-import {ipfs} from '../Comp_IPFS/Ipfs'
 import {connect} from 'react-redux'
 import 'purecss'
+import { generateFormDataAction, submitBountyAction } from '../redux_actions/action_createBounty'
+import { bountysListAction } from '../redux_actions/action_bountysList'
+import { bountyCurrentAction } from '../redux_actions/action_bountyCurrent'
 
 class Home extends Component {
-    funkOne (e) {
+    forcePageUpdate () {
+        this.props.bountysListAction()
     }
+
+    createRandomBounty (e) {
+        this.props.generateFormDataAction().then(() => {
+            const formFields = this.props.createBounty.formFields
+            const values = {
+                comName: formFields.comName,
+                website: formFields.website,
+                comAbout: formFields.comAbout,
+                secEmail: formFields.secEmail,
+                maxEth: formFields.maxEth,
+                minEth: formFields.minEth,
+                uploadImg: formFields.uploadImg,
+                Bountytextarea: formFields.Bountytextarea,
+                deposit: 0.01
+            }
+            this.props.submitBountyAction(values, this.props.ethereumWallet).then(
+                this.forcePageUpdate()
+            )
+        })
+    }
+
+    setCurrentBounty (address, data) {
+        this.props.bountyCurrentAction(address, data, this.props.ethereumWallet.walletAddress)
+    }
+
     render = () => {
         if (!this.state) {
             return (<HomeStyle>
@@ -22,6 +49,51 @@ class Home extends Component {
                     <div className="column-2">
                         <div className="container-3">
                             <div className="container-3_column-1 shadowborder">
+                                <table className='tableHead'>
+                                    <thead>
+                                        <tr>
+                                            <th>Bounty Hash</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    { this.props.bountysList.bountysList ? Object.keys(this.props.bountysList.bountysList).map((key, index) => (
+                                        <tbody key={index} onClick={() => { this.setCurrentBounty(key, this.props.bountysList.bountysList[key]) }}>
+                                            <tr valign="middle">
+                                                <td>{key}</td>
+                                                <td>{this.props.bountysList.bountysList[key].comName}</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    )) : console.log('notloadedyet')}
+                                </table>
+                                <input type='button' value='Force Update' onClick={(e) => { this.forcePageUpdate() }}/>
+                                <input type='button' value='CreateRandomBounty' onClick={(e) => { this.createRandomBounty(e) }}/><br/><br/>
+                                <span>Current Bounty Slected</span><br/>
+                                { this.props.bountyCurrent.bountyLoaded ?
+                                    <div>
+                                        <table className='tableHead'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Owner</th>
+                                                    <th>Bounty Address</th>
+                                                    <th>Owner Address</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr valign="middle">
+                                                    <td>{this.props.bountyCurrent.isOwner.toString()}</td>
+                                                    <td>{this.props.bountyCurrent.bountyCurrent.address}</td>
+                                                    <td>{this.props.bountyCurrent.bountyCurrent.owner}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    : console.log('No')}
+                                <input type='button' value='CurrentBounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                <input type='button' value='Submit Random Bounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
+                                {this.props.bountyCurrent.bountySubmission ? console.log('hacker was here ') : console.log('no hackers here') }
 
 
                             </div>
@@ -35,16 +107,41 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-    ethereumWallet: state.ethereumWallet
+    ethereumWallet: state.ethereumWallet,
+    bountysList: state.bountysList,
+    createBounty: state.createBounty,
+    bountyCurrent: state.bountyCurrent
 })
 
 const mapActionsToProps = {
+    generateFormDataAction,
+    submitBountyAction,
+    bountysListAction,
+    bountyCurrentAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(Home)
 
 const HomeStyle = styled.div`
 height: auto;
+
+table {
+    width: 100%;
+}
+.tableHead{
+    border-bottom: 1px solid black;
+}
+td {
+    white-space: nowrap;
+}
+
+table, th, td {
+    border: 1px solid black;
+
+    border-collapse: collapse;
+}
+
+
 
     .container-1 {
         display: flex;
@@ -101,6 +198,7 @@ height: auto;
         }
         .container-3_column-1 {
             flux: 0;
+            font-family: monospace;
             flex-basis: 100%;
             padding:10px;
             min-height: 900px;

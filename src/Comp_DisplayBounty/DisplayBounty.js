@@ -34,7 +34,10 @@ class DisplayBounty extends Component {
             this.props.walletAddressAction( // @dev update eth address value in dropdown
                 this.props.ethereumWallet.walletAddress)
             this.props.bountyCurrentAction( // @dev update Contract Balance
-                this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountyCurrent)
+                this.props.bountyCurrent.bountyCurrent.address,
+                this.props.bountyCurrent.bountyCurrent,
+                this.props.ethereumWallet.walletAddress
+            )
         })
         this.setState({withdrawValue: ''})
     }
@@ -44,7 +47,10 @@ class DisplayBounty extends Component {
             this.props.walletAddressAction( // @dev update eth address value in dropdown
                 this.props.ethereumWallet.walletAddress)
             this.props.bountyCurrentAction( // @dev update Contract Balance
-                this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountyCurrent)
+                this.props.bountyCurrent.bountyCurrent.address,
+                this.props.bountyCurrent.bountyCurrent,
+                this.props.ethereumWallet.walletAddress
+            )
         })
         this.setState({depositValue: ''})
     }

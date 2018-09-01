@@ -38,18 +38,18 @@ class DisplayBounty extends Component {
                                     ? <table className='CVETable'>
                                         <tbody>
                                             <tr valign="middle">
-                                                <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionState.CVSSData.environmental.severity}`}
-                                                    rowSpan="3">{this.props.bountyCurrent.bountySubmissionState.CVSSData.environmental.score}</td>
+                                                <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.hackerSubmissionState.CVSSData.environmental.severity}`}
+                                                    rowSpan="3">{this.props.bountyCurrent.hackerSubmissionState.CVSSData.environmental.score}</td>
                                                 <td className='trTitle'><b>Stage: </b></td>
-                                                <td>{this.props.bountyCurrent.bountySubmissionState.stage}</td>
+                                                <td>{this.props.bountyCurrent.hackerSubmissionState.stage}</td>
                                             </tr>
                                             <tr>
                                                 <td className='trTitle'><b>weakness: </b></td>
-                                                <td>{this.props.bountyCurrent.bountySubmissionState.attackSurface.weakness}</td>
+                                                <td>{this.props.bountyCurrent.hackerSubmissionState.attackSurface.weakness}</td>
                                             </tr>
                                             <tr>
                                                 <td className='trTitle'><b>Attack: </b></td>
-                                                <td>{this.props.bountyCurrent.bountySubmissionState.attackSurface.weakness}</td>
+                                                <td>{this.props.bountyCurrent.hackerSubmissionState.attackSurface.weakness}</td>
                                             </tr>
                                         </tbody>
                                     </table>
