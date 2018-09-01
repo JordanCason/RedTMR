@@ -1,13 +1,7 @@
 import React, {Component} from 'react'
-import {myContract, web3, bountyabi} from '../Comp_web3/abi.js'
 import styled from 'styled-components'
-import {ipfs} from '../Comp_IPFS/Ipfs'
 import {connect} from 'react-redux'
 import 'purecss'
-// import default_pic from '../img/default.png'
-// import faker from 'faker'
-// import {sampleVDP} from './sampleVDP'
-import {ipfsHashToast, depositEthToast} from '../Comp_toast/Toast'
 import UploadImg from './uploadImg.js'
 
 import CreateBountyForm from './createBountyForm'
@@ -16,61 +10,6 @@ import CreateBountyForm from './createBountyForm'
 import {walletAddressAction} from '../redux_actions/action_walletAddress'
 
 class CreateBounty extends Component {
-    constructor(props) {
-        super(props)
-        this.submitBounty = this.submitBounty.bind(this)
-    }
-
-    submitBounty() {
-        const {walletAddress} = this.props.ethereumWallet
-        // Need to addin a check to make sure values are enterd """Was getting an errer when no imag was upladed"""
-        let uploadImg = document.querySelector('#profileImg').src
-        let comName = document.querySelector('#comName').value
-        let secEmail = document.querySelector('#secEmail').value
-        let initDeposit = document.querySelector('#initDeposit').value
-        let maxEth = document.querySelector('#maxEth').value
-        let minEth = document.querySelector('#minEth').value
-        let Bountytextarea = document.querySelector('#Bountytextarea').value
-        let comAbout = document.querySelector('#comAbout').value
-        console.log(initDeposit)
-        console.log(web3.utils.toWei(initDeposit, 'ether'))
-
-        ipfs.addJSON({
-            uploadImg: uploadImg,
-            comName: comName,
-            comAbout: comAbout,
-            secEmail: secEmail,
-            maxEth: maxEth,
-            minEth: minEth,
-            Bountytextarea: Bountytextarea
-        }, (err, result) => {
-            ipfs.base58ToHex(result).then((result) => {
-                ipfsHashToast(result)
-                // @dev upload IPFS address to smart contract
-                // console.log(`submitted form data pushed to IPFS at http://159.65.232.230/ipfs/${result}`)
-                myContract.methods.createBounty(result).send({
-                    from: walletAddress,
-                    gas: 3000000,
-                    value: web3.utils.toWei(initDeposit, 'ether')
-                }).on('transactionHash', function(hash) {
-                    depositEthToast(hash)
-                }).on('receipt', (receipt) => {
-                    let bountyContractAddress = receipt.events.returnBounty.returnValues[0]
-                    let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
-                    bountyContract.methods.ownerInfo().call().then(function(result) {
-                        console.log(`contract info: `, result)
-                    })
-
-                    // need to setup a listner to get contract address and display toast
-
-                    // ipfs.catJSON(result, (err, result) => {
-                    //     console.log(`The Retreved IPFS object: `,result);
-                    // });
-                })
-            })
-        })
-    };
-
     render = () => {
         return (<CreateBountyStyle>
             <div className="container-1">
@@ -109,13 +48,11 @@ class CreateBounty extends Component {
 }
 
 const mapStateToProps = state => ({
-    // bountysList: state.bountysList,
     ethereumWallet: state.ethereumWallet
 })
 
 const mapActionsToProps = {
     walletAddressAction
-    // bountysListAction,
 }
 export default connect(mapStateToProps, mapActionsToProps)(CreateBounty)
 
