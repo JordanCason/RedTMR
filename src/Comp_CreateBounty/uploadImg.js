@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { profilePictureAction, profilePictureErrAction } from '../redux_actions/action_profilePicture'
+import { profilePictureAction, profilePictureErrAction } from '../redux_actions/action_createBounty'
 
 class UploadImg extends Component {
 
@@ -14,7 +14,7 @@ class UploadImg extends Component {
   render() {
       let imageClass = 'image'
       let errerClass = 'noerror'
-      if (this.props.profilePicture.err) {
+      if (this.props.createBounty.err) {
           imageClass = 'image_error'
           errerClass = 'text_error'
       }
@@ -23,7 +23,7 @@ class UploadImg extends Component {
     return (
     <UploadImgStyle>
         <div className="container">
-        <img className={imageClass} src={this.props.profilePicture.picture} alt="" />
+        <img className={imageClass} src={this.props.createBounty.picture} alt="" />
         <input className='overlay' type='file' onChange={this.handleChange} name='photo' />
         <span className={errerClass}>{'error message'}</span>
         </div>
@@ -34,7 +34,7 @@ class UploadImg extends Component {
 }
 
 const mapStateToProps = state => ({
-    profilePicture: state.profilePicture,
+    createBounty: state.createBounty,
 });
 
 const mapActionsToProps = {

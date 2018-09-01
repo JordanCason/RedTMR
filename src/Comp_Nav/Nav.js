@@ -10,7 +10,7 @@ class Navigation extends Component {
                 <NavLink exact activeClassName="active" className="NavLink" to="/">Directory</NavLink>
                 <NavLink activeClassName="active" className="NavLink" to="/CreateBounty">Create Contract</NavLink>
                 <NavLink activeClassName="active" className="NavLink" to="/Ethereum_test/">Voting Pool</NavLink>
-                <NavLink activeClassName="active" className="NavLink" to="/Markdown2/">test</NavLink>
+                <NavLink activeClassName="active" className="NavLink" to="/testFunk">test contrract functions</NavLink>
                 <AddressDropdown />
             </MainNav>
         )

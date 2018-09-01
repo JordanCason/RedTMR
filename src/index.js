@@ -22,8 +22,8 @@ import { walletReducer as ethereumWallet } from './redux_reducers/reducer_wallet
 import { contractTransactionsReducer as contractTransactions } from './redux_reducers/reducer_contractTransactions'
 import { calculateCVSSReducer as CVSSData } from './redux_reducers/reducer_calculateCVSS'
 import { markdownReducer as markdown } from './redux_reducers/reducer_markdown'
-import { profilePictureReducer as profilePicture } from './redux_reducers/reducer_profilePicture'
 import { tableClickReducer as tableClick } from './redux_reducers/reducer_tableClick'
+import { createBountyReducer as createBounty } from './redux_reducers/reducer_createBounty'
 // import { AddressReducer as ethereumAddress } from './redux_reducers/reducer_walletAddress'
 
 // const middleware = [logger, thunk, promise()]; //[logger, thunk]
@@ -36,8 +36,8 @@ const rootReducers = combineReducers({
     contractTransactions,
     CVSSData,
     markdown,
-    profilePicture,
-    tableClick
+    tableClick,
+    createBounty
 })
 
 export const store = createStore(
@@ -50,7 +50,7 @@ ReactDOM.render(
     <Provider store={store}>
         <App />
     </Provider>,
-document.getElementById('root'))
+    document.getElementById('root'))
 registerServiceWorker()
 
 // import rootReducers from './reducers';
