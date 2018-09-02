@@ -9,7 +9,7 @@ class DisplayBounty extends Component {
     // @DEVEND
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.bountyCurrent.hackerSubmissionStateLoaded) {
+        if (nextProps.bountyCurrent.hackerSubmissionState) {
             return (true)
         } else {
             return (false)
@@ -34,7 +34,7 @@ class DisplayBounty extends Component {
                                         </tr>
                                     </thead>
                                 </table>
-                                {this.props.bountyCurrent.hackerSubmissionStateLoaded
+                                {this.props.bountyCurrent.hackerSubmissionState
                                     ? <table className='CVETable'>
                                         <tbody>
                                             <tr valign="middle">

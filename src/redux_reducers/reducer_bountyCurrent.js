@@ -9,15 +9,12 @@ import { CURRENT_BOUNTY_FULFILLED,
     BOUNTY_OWNER_STATE_SELECT} from '../redux_actions/action_bountyCurrent.js'
 console.log('initstate')
 const initialState = {
-    bountyCurrent: {},
-    bountyCurrentLoaded: false,
-    hackerSubmissionState: {},
-    bountySubmissionStateLoaded: false,
-    bountySubmissionState: {},
-    hackerSubmissionStateLoaded: false,
-    bountySubmissionCurrent: null,
     walletIsBountyOwner: false,
-    promisePending: false
+    promisePending: false,
+    bountyCurrent: null,
+    hackerSubmissionState: null,
+    bountySubmissionState: null,
+    bountySubmissionCurrent: null
 }
 
 export function bountyCurrentReducer(state = initialState, action) {
@@ -32,8 +29,7 @@ export function bountyCurrentReducer(state = initialState, action) {
         return {
             ...state,
             promisePending: false,
-            bountyCurrent: payload,
-            bountyCurrentLoaded: true
+            bountyCurrent: payload
         }
     case CHECK_OWNER_FULFILLED:
         return {
@@ -43,15 +39,12 @@ export function bountyCurrentReducer(state = initialState, action) {
     case CHECK_BOUNTY_HACKER_STATE_FULFILLED:
         return {
             ...state,
-            hackerSubmissionState: payload,
-            hackerSubmissionStateLoaded: payload.hackerSubmissionStateLoaded
-
+            hackerSubmissionState: payload
         }
     case CHECK_BOUNTY_OWNER_STATE_FULFILLED:
         return {
             ...state,
-            bountySubmissionState: payload,
-            bountySubmissionStateLoaded: true
+            bountySubmissionState: payload
         }
     case BOUNTY_OWNER_STATE_SELECT:
         return {

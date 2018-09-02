@@ -25,14 +25,14 @@ class SubNav extends Component {
         const cureWalletAddress = this.props.ethereumWallet.walletAddress
 
         const { bountysList, bountysLoaded } = this.props.bountysList
-        const { bountyCurrentLoaded } = this.props.bountyCurrent
+        const { bountyCurrent } = this.props.bountyCurrent
         const bountyAddress = this.props.match.params.id
         // @dev I think i can now replace theas two if statments with just one.
-        if (!bountyCurrentLoaded && bountysLoaded && this.props.bountyCurrent.promisePending !== true) { // @dev should only be true if a refresh or direct navigation to the displayBounty.js component
+        if (!bountyCurrent && bountysLoaded && this.props.bountyCurrent.promisePending !== true) { // @dev should only be true if a refresh or direct navigation to the displayBounty.js component
             // @dev otherwise preporations for rendering are handled in componentDidMount
             this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
         }
-        if (bountyCurrentLoaded && prevWalletAddress !== cureWalletAddress) { // @dev if wallet address changes check if owner again
+        if (bountyCurrent && prevWalletAddress !== cureWalletAddress) { // @dev if wallet address changes check if owner again
             // this.props.checkOwnerAction(cureWalletAddress, bountyCurrent.owner)
             // this.props.checkBountyStateAction(cureWalletAddress, bountyCurrent.address)
             this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
@@ -45,7 +45,7 @@ class SubNav extends Component {
 
     render() {
         // @dev was getting flicker when trying to load the proper subnav tabs and if else statmens were the only way i was able to fix.
-        if (!this.props.bountyCurrent.walletIsBountyOwner && !this.props.bountyCurrent.hackerSubmissionStateLoaded) {
+        if (!this.props.bountyCurrent.walletIsBountyOwner && !this.props.bountyCurrent.hackerSubmissionState) {
             return (
                 <SubNavStyle>
                     <NavLink exact activeClassName="active" className="NavLink" to={`/Bounty/${this.props.match.params.id}`}>Bounty Contract</NavLink>
@@ -61,7 +61,7 @@ class SubNav extends Component {
                     <NavLink activeClassName="active" className='NavLink' to={`/Bounty/${this.props.match.params.id}/ownerWorkflow`}>Owner Workflow</NavLink>
                 </SubNavStyle>
             )
-        } else if (this.props.bountyCurrent.hackerSubmissionStateLoaded) {
+        } else if (this.props.bountyCurrent.hackerSubmissionState) {
             return (
                 <SubNavStyle>
                     <NavLink exact activeClassName="active" className="NavLink" to={`/Bounty/${this.props.match.params.id}`}>Bounty Contract</NavLink>

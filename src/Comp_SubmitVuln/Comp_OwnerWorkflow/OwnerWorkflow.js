@@ -9,7 +9,7 @@ class DisplayBounty extends Component {
     // @DEVEND
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.bountyCurrent.bountySubmissionStateLoaded) {
+        if (nextProps.bountyCurrent.bountySubmissionState) {
             return (true)
         } else {
             return (false)
@@ -34,40 +34,44 @@ class DisplayBounty extends Component {
                         <div className="container-3_column-1 shadowborder">
                             <div className='tableContainer'>
                                 <p></p>
-                                <table className='tableHead'>
-                                    <thead>
-                                        <tr>
-                                            <th>CVE Score</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                {
-                                    Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => ( // count links to the correct
-                                        <div key={key} onClick={() => { this.props.bountySubmissionCurrentAction(key) }}>
-                                            <table className='CVETable'>
-                                                <tbody>
-                                                    <tr valign="middle">
-                                                        <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionState[key].CVSSData.environmental.severity}`}
-                                                            rowSpan="3">{this.props.bountyCurrent.bountySubmissionState[key].CVSSData.environmental.score}</td>
-                                                        <td className='trTitle'><b>Stage: </b></td>
-                                                        <td>{this.props.bountyCurrent.bountySubmissionState[key].stage}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='trTitle'><b>weakness: </b></td>
-                                                        <td>{this.props.bountyCurrent.bountySubmissionState[key].weakness.weakness}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td className='trTitle'><b>Attack: </b></td>
-                                                        <td>{this.props.bountyCurrent.bountySubmissionState[key].attackSurface.weakness}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div className='spaceing'></div>
-                                        </div>
-                                    ))
-                                }
+                                {this.props.bountyCurrent.bountySubmissionState
+                                    ? <div>
+                                        <table className='tableHead'>
+                                            <thead>
+                                                <tr>
+                                                    <th>CVE Score</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                        {
+                                            Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => ( // count links to the correct
+                                                <div key={key} onClick={() => { this.props.bountySubmissionCurrentAction(key) }}>
+                                                    <table className='CVETable'>
+                                                        <tbody>
+                                                            <tr valign="middle">
+                                                                <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionState[key].CVSSData.environmental.severity}`}
+                                                                    rowSpan="3">{this.props.bountyCurrent.bountySubmissionState[key].CVSSData.environmental.score}</td>
+                                                                <td className='trTitle'><b>Stage: </b></td>
+                                                                <td>{this.props.bountyCurrent.bountySubmissionState[key].stage}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td className='trTitle'><b>weakness: </b></td>
+                                                                <td>{this.props.bountyCurrent.bountySubmissionState[key].weakness.weakness}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td className='trTitle'><b>Attack: </b></td>
+                                                                <td>{this.props.bountyCurrent.bountySubmissionState[key].attackSurface.weakness}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div className='spaceing'></div>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                    : console.log('rude') }
                             </div>
 
                         </div>

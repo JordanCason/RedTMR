@@ -25,7 +25,7 @@ export function bountyCurrentAction(bountyAddress, bountyInfo, wallet) {
                         store.dispatch(checkBountyOwnerStateAction(bountyAddress))
                         resolve(bountyInfo)
                     } else {
-                        resolve(bountyInfo)
+                        resolve(null)
                     }
                 })
             })
@@ -64,9 +64,7 @@ export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
             bountyContract.methods.mappingAddressToStruct(walletAddress).call().then(result => {
                 let payload = {}
                 let hackerSubmission = {}
-                payload.hackerSubmissionStateLoaded = result.submitter !== '0x0000000000000000000000000000000000000000'
-                console.log(`%c ${result.submitter ? console.log(true) : console.log(false)} = ${''}`, 'color:blue')
-                if (payload.hackerSubmissionStateLoaded) {
+                if (result.submitter !== '0x0000000000000000000000000000000000000000') {
                     payload.loaded = true
                     payload.CCVE = result.CCVE
                     payload.ipfsSubmission = result.ipfsSubmission
@@ -85,10 +83,8 @@ export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
                         })
                     })
                 } else {
-                    console.log('chacking hacker state')
-                    payload.loaded = false
                     hackerSubmission = payload // maybe remove reminder
-                    resolve(payload)
+                    resolve(null)
                 }
             })
         })
@@ -108,9 +104,7 @@ export const checkBountyOwnerStateAction = (bountyAddress) => {
             bountyContract.methods.arraylength().call().then(result => {
                 result = parseInt(result, 10)
                 if (!result) {
-                    resolve({
-                        loaded: false
-                    })
+                    resolve(null)
                 } else {
                     let count = 0
                     for (let i = 1; i < result + 1; i++) {

@@ -71,8 +71,8 @@ class Home extends Component {
                                 <input type='button' value='Force Update' onClick={(e) => { this.forcePageUpdate() }}/>
                                 <input type='button' value='CreateRandomBounty' onClick={(e) => { this.createRandomBounty(e) }}/><br/><br/>
                                 <span>Current Bounty Slected</span><br/>
-                                { this.props.bountyCurrent.bountyCurrentLoaded ?
-                                    <div>
+                                { this.props.bountyCurrent.bountyCurrent
+                                    ? <div>
                                         <table className='tableHead'>
                                             <thead>
                                                 <tr>
@@ -93,7 +93,7 @@ class Home extends Component {
                                     : console.log('No')}
                                 <input type='button' value='CurrentBounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
                                 <input type='button' value='Submit Random Bounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
-                                {this.props.bountyCurrent.hackerSubmissionStateLoaded ? console.log('hacker was here ') : console.log('no hackers here') }
+                                {this.props.bountyCurrent.hackerSubmissionState ? console.log('hacker was here ') : console.log('no hackers here') }
 
 
                             </div>
