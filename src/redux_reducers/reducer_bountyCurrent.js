@@ -13,7 +13,7 @@ const initialState = {
     bountyCurrent: null,
     hackerSubmissionState: null,
     bountySubmissionState: null,
-    bountySubmissionCurrent: null
+    bountySubmissionCurrentIndex: null
 }
 
 export function bountyCurrentReducer(state = initialState, action) {
@@ -48,7 +48,7 @@ export function bountyCurrentReducer(state = initialState, action) {
     case BOUNTY_OWNER_STATE_SELECT:
         return {
             ...state,
-            bountySubmissionCurrent: payload
+            bountySubmissionCurrentIndex: payload
         }
     case ACCEPT_VULN_FULFILLED:
         return {

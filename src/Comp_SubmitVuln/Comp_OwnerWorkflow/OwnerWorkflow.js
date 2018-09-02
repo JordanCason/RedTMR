@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 // redux
-import { acceptVulnAction, bountySubmissionCurrentAction, denyVulnAction, testAction2 } from '../../redux_actions/action_bountyCurrent.js'
+import { acceptVulnAction, bountySubmissionCurrentIndexAction, denyVulnAction, testAction2 } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
     // @DEVEND
@@ -25,7 +25,7 @@ class DisplayBounty extends Component {
 
     render = () => {
         const ipfsmessage = 'this is a test ipfs message'
-        let index = this.props.bountyCurrent.bountySubmissionCurrent
+        let index = this.props.bountyCurrent.bountySubmissionCurrentIndex
         return (<DisplayOwnerStyle>
             <div className="container-2">
                 <div className="column-1"></div>
@@ -47,7 +47,7 @@ class DisplayBounty extends Component {
                                         </table>
                                         {
                                             Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => ( // count links to the correct
-                                                <div key={key} onClick={() => { this.props.bountySubmissionCurrentAction(key) }}>
+                                                <div key={key} onClick={() => { this.props.bountySubmissionCurrentIndexAction(key) }}>
                                                     <table className='CVETable'>
                                                         <tbody>
                                                             <tr valign="middle">
@@ -120,7 +120,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
     acceptVulnAction,
-    bountySubmissionCurrentAction,
+    bountySubmissionCurrentIndexAction,
     denyVulnAction,
     testAction2
 }

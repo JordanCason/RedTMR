@@ -144,7 +144,7 @@ export const checkBountyOwnerStateAction = (bountyAddress) => {
 export const BOUNTY_OWNER_STATE_SELECT = 'BOUNTY_OWNER_STATE_SELECT'
 export const BOUNTY_OWNER_STATE_SELECT_FULFILLED = 'BOUNTY_OWNER_STATE_SELECT_FULFILLED'
 
-export const bountySubmissionCurrentAction = (index) => {
+export const bountySubmissionCurrentIndexAction = (index) => {
     return {
         type: BOUNTY_OWNER_STATE_SELECT,
         payload: index

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import 'purecss'
 import { generateFormDataAction, submitBountyAction } from '../redux_actions/action_createBounty'
 import { bountysListAction } from '../redux_actions/action_bountysList'
-import { bountyCurrentAction, bountySubmissionCurrentAction } from '../redux_actions/action_bountyCurrent'
+import { bountyCurrentAction, bountySubmissionCurrentIndexAction } from '../redux_actions/action_bountyCurrent'
 
 class Home extends Component {
     forcePageUpdate () {
@@ -110,7 +110,7 @@ class Home extends Component {
                                                     </tr>
                                                 </thead>
                                                 {Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => (/* list of all bountys submited to this contract */
-                                                    <tbody key={index} onClick={() => { console.log(this.props.bountySubmissionCurrentAction(key)) }}>{ /* onClick set a vulnerablity from the list to preform actions on */ }
+                                                    <tbody key={index} onClick={() => { console.log(this.props.bountySubmissionCurrentIndexAction(key)) }}>{ /* onClick set a vulnerablity from the list to preform actions on */ }
                                                         <tr valign="middle">
                                                             <td>{this.props.bountyCurrent.bountySubmissionState[key].submitter}</td>
                                                             <td>{this.props.bountyCurrent.bountySubmissionState[key].lastActionBy}</td>
@@ -121,7 +121,7 @@ class Home extends Component {
                                                 ))}
                                             </table>
                                             <br/><br/>
-                                            { this.props.bountyCurrent.bountySubmissionCurrent
+                                            { this.props.bountyCurrent.bountySubmissionCurrentIndex
                                                 ? <div>
                                                     <span>Current Vulnerablity Slected</span><br/>
                                                     <table className='tableHead'>
@@ -192,7 +192,7 @@ const mapStateToProps = state => ({
     bountysList: state.bountysList,
     createBounty: state.createBounty,
     bountyCurrent: state.bountyCurrent,
-    bountySubmissionCurrent: state.bountySubmissionCurrent
+    bountySubmissionCurrentIndex: state.bountySubmissionCurrentIndex
 })
 
 const mapActionsToProps = {
@@ -200,7 +200,7 @@ const mapActionsToProps = {
     submitBountyAction,
     bountysListAction,
     bountyCurrentAction,
-    bountySubmissionCurrentAction
+    bountySubmissionCurrentIndexAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(Home)
