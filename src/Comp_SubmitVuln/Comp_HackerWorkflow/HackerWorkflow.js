@@ -3,13 +3,13 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 // redux
-import { acceptVulnAction, bountyOwnerStateSelectAction } from '../../redux_actions/action_bountyCurrent.js'
+import { acceptVulnAction, bountySubmissionCurrentAction } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
     // @DEVEND
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.bountyCurrent.bountySubmission) {
+        if (nextProps.bountyCurrent.hackerSubmissionStateLoaded) {
             return (true)
         } else {
             return (false)
@@ -34,7 +34,7 @@ class DisplayBounty extends Component {
                                         </tr>
                                     </thead>
                                 </table>
-                                {this.props.bountyCurrent.bountySubmission
+                                {this.props.bountyCurrent.hackerSubmissionStateLoaded
                                     ? <table className='CVETable'>
                                         <tbody>
                                             <tr valign="middle">
@@ -82,7 +82,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
     acceptVulnAction,
-    bountyOwnerStateSelectAction
+    bountySubmissionCurrentAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)

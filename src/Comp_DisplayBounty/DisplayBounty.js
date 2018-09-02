@@ -68,9 +68,9 @@ class DisplayBounty extends Component {
     componentDidUpdate(prevProps) {}
 
     render = () => {
-        const {bountyCurrent, bountyLoaded} = this.props.bountyCurrent
+        const {bountyCurrent, bountyCurrentLoaded} = this.props.bountyCurrent
         const bountyAddress = this.props.match.params.id // @dev
-        if (bountyLoaded && bountyCurrent.address === bountyAddress) {
+        if (bountyCurrentLoaded && bountyCurrent.address === bountyAddress) {
             return (<DisplayBountyStyle>
 
                 <div className="container-2">

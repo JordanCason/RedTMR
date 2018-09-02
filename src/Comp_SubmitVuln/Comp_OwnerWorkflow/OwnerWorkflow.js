@@ -3,13 +3,13 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 // redux
-import { acceptVulnAction, bountyOwnerStateSelectAction, denyVulnAction, testAction2 } from '../../redux_actions/action_bountyCurrent.js'
+import { acceptVulnAction, bountySubmissionCurrentAction, denyVulnAction, testAction2 } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
     // @DEVEND
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.bountyCurrent.ownerStateLoaded) {
+        if (nextProps.bountyCurrent.bountySubmissionStateLoaded) {
             return (true)
         } else {
             return (false)
@@ -25,7 +25,7 @@ class DisplayBounty extends Component {
 
     render = () => {
         const ipfsmessage = 'this is a test ipfs message'
-        let index = this.props.bountyCurrent.bountyOwnerStateSelect
+        let index = this.props.bountyCurrent.bountySubmissionCurrent
         return (<DisplayOwnerStyle>
             <div className="container-2">
                 <div className="column-1"></div>
@@ -44,23 +44,23 @@ class DisplayBounty extends Component {
                                     </thead>
                                 </table>
                                 {
-                                    Object.keys(this.props.bountyCurrent.bountySubmissionOwnerState).map((key, index) => ( // count links to the correct
-                                        <div key={key} onClick={() => { this.props.bountyOwnerStateSelectAction(key) }}>
+                                    Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => ( // count links to the correct
+                                        <div key={key} onClick={() => { this.props.bountySubmissionCurrentAction(key) }}>
                                             <table className='CVETable'>
                                                 <tbody>
                                                     <tr valign="middle">
-                                                        <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionOwnerState[key].CVSSData.environmental.severity}`}
-                                                            rowSpan="3">{this.props.bountyCurrent.bountySubmissionOwnerState[key].CVSSData.environmental.score}</td>
+                                                        <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionState[key].CVSSData.environmental.severity}`}
+                                                            rowSpan="3">{this.props.bountyCurrent.bountySubmissionState[key].CVSSData.environmental.score}</td>
                                                         <td className='trTitle'><b>Stage: </b></td>
-                                                        <td>{this.props.bountyCurrent.bountySubmissionOwnerState[key].stage}</td>
+                                                        <td>{this.props.bountyCurrent.bountySubmissionState[key].stage}</td>
                                                     </tr>
                                                     <tr>
                                                         <td className='trTitle'><b>weakness: </b></td>
-                                                        <td>{this.props.bountyCurrent.bountySubmissionOwnerState[key].weakness.weakness}</td>
+                                                        <td>{this.props.bountyCurrent.bountySubmissionState[key].weakness.weakness}</td>
                                                     </tr>
                                                     <tr>
                                                         <td className='trTitle'><b>Attack: </b></td>
-                                                        <td>{this.props.bountyCurrent.bountySubmissionOwnerState[key].attackSurface.weakness}</td>
+                                                        <td>{this.props.bountyCurrent.bountySubmissionState[key].attackSurface.weakness}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -75,23 +75,23 @@ class DisplayBounty extends Component {
                             <div>{index ? <div><table className='CVETable'>
                                 <tbody>
                                     <tr valign="middle">
-                                        <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionOwnerState[index].CVSSData.environmental.severity}`}
-                                            rowSpan="3">{this.props.bountyCurrent.bountySubmissionOwnerState[index].CVSSData.environmental.score}</td>
+                                        <td className={`${'CVEScore'} ${'scoreRating'} ${this.props.bountyCurrent.bountySubmissionState[index].CVSSData.environmental.severity}`}
+                                            rowSpan="3">{this.props.bountyCurrent.bountySubmissionState[index].CVSSData.environmental.score}</td>
                                         <td className='trTitle'><b>Stage: </b></td>
-                                        <td>{this.props.bountyCurrent.bountySubmissionOwnerState[index].stage}</td>
+                                        <td>{this.props.bountyCurrent.bountySubmissionState[index].stage}</td>
                                     </tr>
                                     <tr>
                                         <td className='trTitle'><b>weakness: </b></td>
-                                        <td>{this.props.bountyCurrent.bountySubmissionOwnerState[index].weakness.weakness}</td>
+                                        <td>{this.props.bountyCurrent.bountySubmissionState[index].weakness.weakness}</td>
                                     </tr>
                                     <tr>
                                         <td className='trTitle'><b>Attack: </b></td>
-                                        <td>{this.props.bountyCurrent.bountySubmissionOwnerState[index].attackSurface.weakness}</td>
+                                        <td>{this.props.bountyCurrent.bountySubmissionState[index].attackSurface.weakness}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="button" onClick={() => { acceptVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionOwnerState[index].submitter) }}>accept Vulnerablity</button>
-                            <button type="button" onClick={() => { this.props.denyVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionOwnerState[index].submitter, ipfsmessage) }}>deny Vulnerablity</button>
+                            <button type="button" onClick={() => { acceptVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionState[index].submitter) }}>accept Vulnerablity</button>
+                            <button type="button" onClick={() => { this.props.denyVulnAction(this.props.ethereumWallet.walletAddress, this.props.bountyCurrent.bountyCurrent.address, this.props.bountyCurrent.bountySubmissionState[index].submitter, ipfsmessage) }}>deny Vulnerablity</button>
                             <button type="button" onClick={() => { this.props.testAction2() }}>test</button>
                             <button type="button" onClick={() => { console.log(this.props.bountyCurrent) }}>console.log</button>
                             <button type="button" onClick={() => { this.handleclick() }}>bzz</button>
@@ -116,7 +116,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
     acceptVulnAction,
-    bountyOwnerStateSelectAction,
+    bountySubmissionCurrentAction,
     denyVulnAction,
     testAction2
 }

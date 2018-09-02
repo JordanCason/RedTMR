@@ -10,15 +10,13 @@ import { CURRENT_BOUNTY_FULFILLED,
 console.log('initstate')
 const initialState = {
     bountyCurrent: {},
-    hackerSubmissionState: {
-        vulnerabilitySubmitted: false
-    },
+    bountyCurrentLoaded: false,
+    hackerSubmissionState: {},
+    bountySubmissionStateLoaded: false,
     bountySubmissionState: {},
-    bountyOwnerStateSelect: null,
-    bountyLoaded: false,
-    ownerStateLoaded: false,
-    isOwner: false,
-    bountySubmission: false,
+    hackerSubmissionStateLoaded: false,
+    bountySubmissionCurrent: null,
+    walletIsBountyOwner: false,
     promisePending: false
 }
 
@@ -28,37 +26,37 @@ export function bountyCurrentReducer(state = initialState, action) {
     case CURRENT_BOUNTY_PENDING:
         return {
             ...state,
-            promisePending: true
+            promisePending: true // dont think this is neaded anymore or should find a better way to manage
         }
     case CURRENT_BOUNTY_FULFILLED:
         return {
             ...state,
             promisePending: false,
             bountyCurrent: payload,
-            bountyLoaded: true
+            bountyCurrentLoaded: true
         }
     case CHECK_OWNER_FULFILLED:
         return {
             ...state,
-            isOwner: payload
+            walletIsBountyOwner: payload
         }
     case CHECK_BOUNTY_HACKER_STATE_FULFILLED:
         return {
             ...state,
             hackerSubmissionState: payload,
-            bountySubmission: payload.bountySubmission
+            hackerSubmissionStateLoaded: payload.hackerSubmissionStateLoaded
 
         }
     case CHECK_BOUNTY_OWNER_STATE_FULFILLED:
         return {
             ...state,
-            bountySubmissionOwnerState: payload,
-            ownerStateLoaded: true
+            bountySubmissionState: payload,
+            bountySubmissionStateLoaded: true
         }
     case BOUNTY_OWNER_STATE_SELECT:
         return {
             ...state,
-            bountyOwnerStateSelect: payload
+            bountySubmissionCurrent: payload
         }
     case ACCEPT_VULN_FULFILLED:
         return {

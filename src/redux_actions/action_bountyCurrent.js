@@ -64,9 +64,9 @@ export const checkBountyStateHackerAction = (walletAddress, bountyAddress) => {
             bountyContract.methods.mappingAddressToStruct(walletAddress).call().then(result => {
                 let payload = {}
                 let hackerSubmission = {}
-                payload.bountySubmission = result.submitter !== '0x0000000000000000000000000000000000000000'
+                payload.hackerSubmissionStateLoaded = result.submitter !== '0x0000000000000000000000000000000000000000'
                 console.log(`%c ${result.submitter ? console.log(true) : console.log(false)} = ${''}`, 'color:blue')
-                if (payload.bountySubmission) {
+                if (payload.hackerSubmissionStateLoaded) {
                     payload.loaded = true
                     payload.CCVE = result.CCVE
                     payload.ipfsSubmission = result.ipfsSubmission
@@ -150,7 +150,7 @@ export const checkBountyOwnerStateAction = (bountyAddress) => {
 export const BOUNTY_OWNER_STATE_SELECT = 'BOUNTY_OWNER_STATE_SELECT'
 export const BOUNTY_OWNER_STATE_SELECT_FULFILLED = 'BOUNTY_OWNER_STATE_SELECT_FULFILLED'
 
-export const bountyOwnerStateSelectAction = (index) => {
+export const bountySubmissionCurrentAction = (index) => {
     return {
         type: BOUNTY_OWNER_STATE_SELECT,
         payload: index

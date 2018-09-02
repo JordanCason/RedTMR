@@ -71,7 +71,7 @@ class Home extends Component {
                                 <input type='button' value='Force Update' onClick={(e) => { this.forcePageUpdate() }}/>
                                 <input type='button' value='CreateRandomBounty' onClick={(e) => { this.createRandomBounty(e) }}/><br/><br/>
                                 <span>Current Bounty Slected</span><br/>
-                                { this.props.bountyCurrent.bountyLoaded ?
+                                { this.props.bountyCurrent.bountyCurrentLoaded ?
                                     <div>
                                         <table className='tableHead'>
                                             <thead>
@@ -83,7 +83,7 @@ class Home extends Component {
                                             </thead>
                                             <tbody>
                                                 <tr valign="middle">
-                                                    <td>{this.props.bountyCurrent.isOwner.toString()}</td>
+                                                    <td>{this.props.bountyCurrent.walletIsBountyOwner.toString()}</td>
                                                     <td>{this.props.bountyCurrent.bountyCurrent.address}</td>
                                                     <td>{this.props.bountyCurrent.bountyCurrent.owner}</td>
                                                 </tr>
@@ -93,7 +93,7 @@ class Home extends Component {
                                     : console.log('No')}
                                 <input type='button' value='CurrentBounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
                                 <input type='button' value='Submit Random Bounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
-                                {this.props.bountyCurrent.bountySubmission ? console.log('hacker was here ') : console.log('no hackers here') }
+                                {this.props.bountyCurrent.hackerSubmissionStateLoaded ? console.log('hacker was here ') : console.log('no hackers here') }
 
 
                             </div>
