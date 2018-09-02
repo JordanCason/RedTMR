@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import 'purecss'
 import { generateFormDataAction, submitBountyAction } from '../redux_actions/action_createBounty'
 import { bountysListAction } from '../redux_actions/action_bountysList'
-import { bountyCurrentAction } from '../redux_actions/action_bountyCurrent'
+import { bountyCurrentAction, bountySubmissionCurrentAction } from '../redux_actions/action_bountyCurrent'
 
 class Home extends Component {
     forcePageUpdate () {
@@ -73,9 +73,9 @@ class Home extends Component {
                                 </table>
                                 <input type='button' value='Force Update' onClick={(e) => { this.forcePageUpdate() }}/>
                                 <input type='button' value='CreateRandomBounty' onClick={(e) => { this.createRandomBounty(e) }}/><br/><br/>
-                                <span>Current Bounty Slected</span><br/>
                                 { this.props.bountyCurrent.bountyCurrent
                                     ? <div>
+                                        <span>Current Bounty Slected</span><br/>
                                         <table className='tableHead'>
                                             <thead>
                                                 <tr>
@@ -109,9 +109,8 @@ class Home extends Component {
                                                         <th>Score</th>
                                                     </tr>
                                                 </thead>
-
-                                                {Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => (
-                                                    <tbody key={index} onClick={() => { console.log(this.props.bountyCurrent.bountySubmissionState) }}>
+                                                {Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => (/* list of all bountys submited to this contract */
+                                                    <tbody key={index} onClick={() => { console.log(this.props.bountySubmissionCurrentAction(key)) }}>{ /* onClick set a vulnerablity from the list to preform actions on */ }
                                                         <tr valign="middle">
                                                             <td>{this.props.bountyCurrent.bountySubmissionState[key].submitter}</td>
                                                             <td>{this.props.bountyCurrent.bountySubmissionState[key].lastActionBy}</td>
@@ -121,9 +120,34 @@ class Home extends Component {
                                                     </tbody>
                                                 ))}
                                             </table>
-                                            <input type='button' value='Accept Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
-                                            <input type='button' value='Deny Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
                                             <br/><br/>
+                                            { this.props.bountyCurrent.bountySubmissionCurrent
+                                                ? <div>
+                                                    <span>Current Vulnerablity Slected</span><br/>
+                                                    <table className='tableHead'>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Owner</th>
+                                                                <th>Bounty Address</th>
+                                                                <th>Owner Address</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr valign="middle">
+                                                                <td>{this.props.bountyCurrent.walletIsBountyOwner.toString()}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <input type='button' value='Accept Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                                    <input type='button' value='Deny Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
+                                                </div>
+                                                : console.log('No')}
+
+
+
+
+
+
                                         </div>
                                         : console.log('No bountys Submitted')
                                     : this.props.bountyCurrent.hackerSubmissionState // if wallet is not the owner check if current address has submited a vulnerablity
@@ -167,14 +191,16 @@ const mapStateToProps = state => ({
     ethereumWallet: state.ethereumWallet,
     bountysList: state.bountysList,
     createBounty: state.createBounty,
-    bountyCurrent: state.bountyCurrent
+    bountyCurrent: state.bountyCurrent,
+    bountySubmissionCurrent: state.bountySubmissionCurrent
 })
 
 const mapActionsToProps = {
     generateFormDataAction,
     submitBountyAction,
     bountysListAction,
-    bountyCurrentAction
+    bountyCurrentAction,
+    bountySubmissionCurrentAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(Home)
@@ -190,6 +216,7 @@ table {
 }
 td {
     white-space: nowrap;
+    cursor: pointer;
 }
 
 table, th, td {
