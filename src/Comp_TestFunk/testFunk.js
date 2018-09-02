@@ -31,11 +31,15 @@ class Home extends Component {
         })
     }
 
+
+
     setCurrentBounty (address, data) {
         this.props.bountyCurrentAction(address, data, this.props.ethereumWallet.walletAddress)
     }
 
     render = () => {
+        const test = this.props.createBounty.confirmation
+        console.log(test)
         if (!this.state) {
             return (<HomeStyle>
                 <div className="container-1">
@@ -49,12 +53,12 @@ class Home extends Component {
                     <div className="column-2">
                         <div className="container-3">
                             <div className="container-3_column-1 shadowborder">
+                                <span>Bountys Listed in contract</span>
                                 <table className='tableHead'>
                                     <thead>
                                         <tr>
                                             <th>Bounty Hash</th>
-                                            <th></th>
-                                            <th></th>
+                                            <th>Name</th>
                                         </tr>
                                     </thead>
 
@@ -63,10 +67,9 @@ class Home extends Component {
                                             <tr valign="middle">
                                                 <td>{key}</td>
                                                 <td>{this.props.bountysList.bountysList[key].comName}</td>
-                                                <td></td>
                                             </tr>
                                         </tbody>
-                                    )) : console.log('notloadedyet')}
+                                    )) : <tbody></tbody>}
                                 </table>
                                 <input type='button' value='Force Update' onClick={(e) => { this.forcePageUpdate() }}/>
                                 <input type='button' value='CreateRandomBounty' onClick={(e) => { this.createRandomBounty(e) }}/><br/><br/>
@@ -89,13 +92,67 @@ class Home extends Component {
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <input type='button' value='CurrentBounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                        <input type='button' value='Submit Random Bounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
                                     </div>
                                     : console.log('No')}
-                                <input type='button' value='CurrentBounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
-                                <input type='button' value='Submit Random Bounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
-                                {this.props.bountyCurrent.hackerSubmissionState ? console.log('hacker was here ') : console.log('no hackers here') }
+                                {this.props.bountyCurrent.walletIsBountyOwner // check if current wallet is the owner of the bounty
+                                    ? this.props.bountyCurrent.bountySubmissionState // if wallet is the owner see if anyone has submitted a vulnerablity
+                                        ? <div test={console.log('Bounty has been submitted')}>
+                                            <span>Vulnerablitys Submitted To This Contract</span>
+                                            <table className='tableHead'>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Submitter</th>
+                                                        <th>LastAction By</th>
+                                                        <th>Stage</th>
+                                                        <th>Score</th>
+                                                    </tr>
+                                                </thead>
 
-
+                                                {Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => (
+                                                    <tbody key={index} onClick={() => { console.log(this.props.bountyCurrent.bountySubmissionState) }}>
+                                                        <tr valign="middle">
+                                                            <td>{this.props.bountyCurrent.bountySubmissionState[key].submitter}</td>
+                                                            <td>{this.props.bountyCurrent.bountySubmissionState[key].lastActionBy}</td>
+                                                            <td>{this.props.bountyCurrent.bountySubmissionState[key].stage}</td>
+                                                            <td>{this.props.bountyCurrent.bountySubmissionState[key].CVSSData.temporal.score}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                ))}
+                                            </table>
+                                            <input type='button' value='Accept Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                            <input type='button' value='Deny Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                            <br/><br/>
+                                        </div>
+                                        : console.log('No bountys Submitted')
+                                    : this.props.bountyCurrent.hackerSubmissionState // if wallet is not the owner check if current address has submited a vulnerablity
+                                        ? <div test={ console.log('hacker Was Here') }>
+                                            <span>Hacker Submitted Vulnerablitys</span>
+                                            <table className='tableHead'>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Submitter</th>
+                                                        <th>LastAction By</th>
+                                                        <th>Stage</th>
+                                                        <th>Score</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody onClick={() => { console.log(this.props.bountyCurrent.hackerSubmissionState) }}>
+                                                    <tr valign="middle">
+                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.submitter}</td>
+                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.lastActionBy}</td>
+                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.stage}</td>
+                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.CVSSData.temporal.score}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <input type='button' value='Accept Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                            <input type='button' value='Deny Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                            <br/><br/>
+                                        </div>
+                                        : console.log('No Hackers Here')
+                                }
                             </div>
                         </div>
                     </div>

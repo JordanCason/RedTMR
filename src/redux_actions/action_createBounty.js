@@ -125,13 +125,16 @@ export function submitBountyAction(values, wallet) {
                         })
                         .on('receipt', (receipt) => {
                             transactionReceiptToast(receipt, deposit)
-                            let bountyContractAddress = receipt.events.returnBounty.returnValues[0]
-                            let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
-                            bountyContract.methods.ownerInfo().call().then(function(result) {
-                                // console.log(`contract info: `, result)
-                                resolve()
-                            })
+                            // let bountyContractAddress = receipt.events.returnBounty.returnValues[0]
+                            // let bountyContract = new web3.eth.Contract(bountyabi, bountyContractAddress)
+                            // bountyContract.methods.ownerInfo().call().then(function(result) {
+                            //     // console.log(`contract info: `, result)
+                            //     resolve()
+                            // })
                             // need to setup a listner to get contract address and display toast
+                        })
+                        .on('confirmation', (result) => {
+                            resolve(true)
                         })
                 })
             })

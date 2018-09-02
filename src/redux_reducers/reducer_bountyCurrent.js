@@ -7,7 +7,6 @@ import { CURRENT_BOUNTY_FULFILLED,
     ACCEPT_VULN_FULFILLED,
     CHECK_BOUNTY_OWNER_STATE_FULFILLED,
     BOUNTY_OWNER_STATE_SELECT} from '../redux_actions/action_bountyCurrent.js'
-console.log('initstate')
 const initialState = {
     walletIsBountyOwner: false,
     promisePending: false,

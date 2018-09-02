@@ -3,7 +3,8 @@ import {
     PROFILE_PICTURE_PENDING,
     PROFILE_PICTURE_ERR,
     GENERATE_PICTURE_FULFILLED,
-    GENERATE_FORM_DATA_FULFILLED
+    GENERATE_FORM_DATA_FULFILLED,
+    SUBMIT_BOUNTY_FULFILLED
 } from '../redux_actions/action_createBounty'
 import defaultPic from '../img/default.png'
 
@@ -19,7 +20,6 @@ const init = {
 
 export function createBountyReducer(state = init, action) {
     const { type, payload } = action
-    console.log(type)
     switch (type) {
     case PROFILE_PICTURE_PENDING:
         return {
@@ -49,6 +49,11 @@ export function createBountyReducer(state = init, action) {
         return {
             ...state,
             formFields: payload
+        }
+    case SUBMIT_BOUNTY_FULFILLED:
+        return {
+            ...state,
+            confirmation: payload
         }
     default:
         return state
