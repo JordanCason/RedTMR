@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
 import 'purecss'
-import { generateFormDataAction, submitBountyAction } from '../redux_actions/action_createBounty'
+import { generateFormDataAction, submitBountyAction, submitRandomVulnerablityAction } from '../redux_actions/action_createBounty'
 import { bountysListAction } from '../redux_actions/action_bountysList'
-import { bountyCurrentAction, bountySubmissionCurrentIndexAction } from '../redux_actions/action_bountyCurrent'
+import { bountyCurrentAction, bountySubmissionStateIndexAction, acceptVulnAction } from '../redux_actions/action_bountyCurrent'
 
 class Home extends Component {
     forcePageUpdate () {
@@ -38,8 +38,6 @@ class Home extends Component {
     }
 
     render = () => {
-        const test = this.props.createBounty.confirmation
-        console.log(test)
         if (!this.state) {
             return (<HomeStyle>
                 <div className="container-1">
@@ -57,6 +55,7 @@ class Home extends Component {
                                 <table className='tableHead'>
                                     <thead>
                                         <tr>
+                                            <th>Owner</th>
                                             <th>Bounty Hash</th>
                                             <th>Name</th>
                                         </tr>
@@ -65,6 +64,10 @@ class Home extends Component {
                                     { this.props.bountysList.bountysList ? Object.keys(this.props.bountysList.bountysList).map((key, index) => (
                                         <tbody key={index} onClick={() => { this.setCurrentBounty(key, this.props.bountysList.bountysList[key]) }}>
                                             <tr valign="middle">
+                                                <td className={ this.props.ethereumWallet.walletAddress === this.props.bountysList.bountysList[key].owner
+                                                    ? 'isCurrentAddress'
+                                                    : '' }>{key}
+                                                </td>
                                                 <td>{key}</td>
                                                 <td>{this.props.bountysList.bountysList[key].comName}</td>
                                             </tr>
@@ -80,20 +83,27 @@ class Home extends Component {
                                             <thead>
                                                 <tr>
                                                     <th>Owner</th>
-                                                    <th>Bounty Address</th>
                                                     <th>Owner Address</th>
+                                                    <th>Bounty Address</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr valign="middle">
                                                     <td>{this.props.bountyCurrent.walletIsBountyOwner.toString()}</td>
+                                                    <td className={ this.props.ethereumWallet.walletAddress === this.props.bountyCurrent.bountyCurrent.owner
+                                                        ? 'isCurrentAddress'
+                                                        : ''
+                                                    }>{this.props.bountyCurrent.bountyCurrent.owner}
+                                                    </td>
                                                     <td>{this.props.bountyCurrent.bountyCurrent.address}</td>
-                                                    <td>{this.props.bountyCurrent.bountyCurrent.owner}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                         <input type='button' value='CurrentBounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
-                                        <input type='button' value='Submit Random Bounty' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
+                                        <input type='button' value='Submit Random Bounty' onClick={(e) => {
+                                            this.props.submitRandomVulnerablityAction(this.props.ethereumWallet.walletAddress,
+                                                this.props.bountyCurrent.bountyCurrent.address)
+                                        }}/><br/><br/>
                                     </div>
                                     : console.log('No')}
                                 {this.props.bountyCurrent.walletIsBountyOwner // check if current wallet is the owner of the bounty
@@ -110,10 +120,16 @@ class Home extends Component {
                                                     </tr>
                                                 </thead>
                                                 {Object.keys(this.props.bountyCurrent.bountySubmissionState).map((key, index) => (/* list of all bountys submited to this contract */
-                                                    <tbody key={index} onClick={() => { console.log(this.props.bountySubmissionCurrentIndexAction(key)) }}>{ /* onClick set a vulnerablity from the list to preform actions on */ }
+                                                    <tbody key={index} onClick={() => { console.log(this.props.bountySubmissionStateIndexAction(key)) }}>{ /* onClick set a vulnerablity from the list to preform actions on */ }
                                                         <tr valign="middle">
-                                                            <td>{this.props.bountyCurrent.bountySubmissionState[key].submitter}</td>
-                                                            <td>{this.props.bountyCurrent.bountySubmissionState[key].lastActionBy}</td>
+                                                            <td className={this.props.ethereumWallet.walletAddress === this.props.bountyCurrent.bountySubmissionState[key].submitter
+                                                                ? 'isCurrentAddress'
+                                                                : ''
+                                                            }>{this.props.bountyCurrent.bountySubmissionState[key].submitter}</td>
+                                                            <td className={this.props.ethereumWallet.walletAddress === this.props.bountyCurrent.bountySubmissionState[key].lastActionBy
+                                                                ? 'isCurrentAddress'
+                                                                : ''
+                                                            }>{this.props.bountyCurrent.bountySubmissionState[key].lastActionBy}</td>
                                                             <td>{this.props.bountyCurrent.bountySubmissionState[key].stage}</td>
                                                             <td>{this.props.bountyCurrent.bountySubmissionState[key].CVSSData.temporal.score}</td>
                                                         </tr>
@@ -121,33 +137,38 @@ class Home extends Component {
                                                 ))}
                                             </table>
                                             <br/><br/>
-                                            { this.props.bountyCurrent.bountySubmissionCurrentIndex
+                                            { this.props.bountyCurrent.bountySubmissionStateIndex
                                                 ? <div>
                                                     <span>Current Vulnerablity Slected</span><br/>
                                                     <table className='tableHead'>
                                                         <thead>
                                                             <tr>
-                                                                <th>Owner</th>
-                                                                <th>Bounty Address</th>
-                                                                <th>Owner Address</th>
+                                                                <th>Submitter</th>
+                                                                <th>LastAction By</th>
+                                                                <th>Stage</th>
+                                                                <th>Score</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr valign="middle">
-                                                                <td>{this.props.bountyCurrent.walletIsBountyOwner.toString()}</td>
+                                                                <td>{this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex].submitter}</td>
+                                                                <td className={this.props.ethereumWallet.walletAddress === this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex].lastActionBy
+                                                                    ? 'isCurrentAddress'
+                                                                    : ''
+                                                                }>{this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex].lastActionBy}</td>
+                                                                <td>{this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex].stage}</td>
+                                                                <td>{this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex].CVSSData.temporal.score}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <input type='button' value='Accept Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/>
+                                                    <input test={console.log(this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex])} type='button' value='Accept Vulnerablity' onClick={(e) => {
+                                                        acceptVulnAction(this.props.ethereumWallet.walletAddress,
+                                                            this.props.bountyCurrent.bountyCurrent.address,
+                                                            this.props.bountyCurrent.bountySubmissionState[this.props.bountyCurrent.bountySubmissionStateIndex].submitter)
+                                                    } }/>
                                                     <input type='button' value='Deny Vulnerablity' onClick={(e) => { console.log(this.props.bountyCurrent) }}/><br/><br/>
                                                 </div>
                                                 : console.log('No')}
-
-
-
-
-
-
                                         </div>
                                         : console.log('No bountys Submitted')
                                     : this.props.bountyCurrent.hackerSubmissionState // if wallet is not the owner check if current address has submited a vulnerablity
@@ -157,6 +178,7 @@ class Home extends Component {
                                                 <thead>
                                                     <tr>
                                                         <th>Submitter</th>
+                                                        <th>Submitters Address</th>
                                                         <th>LastAction By</th>
                                                         <th>Stage</th>
                                                         <th>Score</th>
@@ -164,8 +186,12 @@ class Home extends Component {
                                                 </thead>
                                                 <tbody onClick={() => { console.log(this.props.bountyCurrent.hackerSubmissionState) }}>
                                                     <tr valign="middle">
-                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.submitter}</td>
-                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.lastActionBy}</td>
+                                                        <td>{this.props.bountyCurrent.hackerSubmissionState.submitter === this.props.ethereumWallet.walletAddress ? 'true' : 'false'}</td>
+                                                        <td className={this.props.bountyCurrent.hackerSubmissionState.submitter === this.props.ethereumWallet.walletAddress
+                                                            ? 'isCurrentAddress' : ''}>{this.props.bountyCurrent.hackerSubmissionState.submitter}
+                                                        </td>
+                                                        <td className={this.props.bountyCurrent.hackerSubmissionState.submitter === this.props.ethereumWallet.walletAddress
+                                                            ? 'isCurrentAddress' : ''}>{this.props.bountyCurrent.hackerSubmissionState.lastActionBy}</td>
                                                         <td>{this.props.bountyCurrent.hackerSubmissionState.stage}</td>
                                                         <td>{this.props.bountyCurrent.hackerSubmissionState.CVSSData.temporal.score}</td>
                                                     </tr>
@@ -192,7 +218,7 @@ const mapStateToProps = state => ({
     bountysList: state.bountysList,
     createBounty: state.createBounty,
     bountyCurrent: state.bountyCurrent,
-    bountySubmissionCurrentIndex: state.bountySubmissionCurrentIndex
+    bountySubmissionStateIndex: state.bountySubmissionStateIndex
 })
 
 const mapActionsToProps = {
@@ -200,7 +226,9 @@ const mapActionsToProps = {
     submitBountyAction,
     bountysListAction,
     bountyCurrentAction,
-    bountySubmissionCurrentIndexAction
+    bountySubmissionStateIndexAction,
+    submitRandomVulnerablityAction,
+    acceptVulnAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(Home)
@@ -223,6 +251,10 @@ table, th, td {
     border: 1px solid black;
 
     border-collapse: collapse;
+}
+
+.isCurrentAddress {
+    background-color: red;
 }
 
 

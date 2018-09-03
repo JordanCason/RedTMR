@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 // redux
-import { acceptVulnAction, bountySubmissionCurrentIndexAction } from '../../redux_actions/action_bountyCurrent.js'
+import { acceptVulnAction, bountySubmissionStateIndexAction } from '../../redux_actions/action_bountyCurrent.js'
 
 class DisplayBounty extends Component {
     // @DEVEND
@@ -82,7 +82,7 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
     acceptVulnAction,
-    bountySubmissionCurrentIndexAction
+    bountySubmissionStateIndexAction
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(DisplayBounty)

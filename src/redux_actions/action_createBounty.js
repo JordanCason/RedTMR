@@ -1,4 +1,4 @@
-import { myContract, web3 } from '../Comp_web3/abi.js'
+import { myContract, web3, bountyabi } from '../Comp_web3/abi.js'
 import { store } from '../index.js'
 import { upload, loadimg, ipfs, ipfsHost } from '../Comp_IPFS/Ipfs'
 import faker from 'faker'
@@ -138,6 +138,50 @@ export function submitBountyAction(values, wallet) {
                         })
                 })
             })
+        })
+    }
+}
+
+
+export const submitRandomVulnerablityAction = (walletAddress, bountyAddress) => {
+    return {
+        type: SUBMIT_BOUNTY,
+        payload: new Promise((resolve, reject) => {
+            const precision = 10 // 1 decimals
+            const randomnum = Math.floor(Math.random() * (10 * precision - 1 * precision) + 1 * precision) / (1 * precision)
+            console.log(randomnum)
+            const vulnData = {
+                attackSurface: {reduxTableName: 'Attack', key: '5', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+                weakness: {reduxTableName: 'Weakness', key: '5', weakness: 'Command Injection - Generic', CWE: 'CWE-77'},
+                ReportDetails: `↵![Add an img](https://oracletimes.com/wp-content/uploads/2018/03/Ethereum-Cover.png "ETH")↵↵# Disclosure Policy↵↵No technology is perfect, and N/A believes that working with skilled security researchers across the globe is crucial in identifying weaknesses in any technology. If you believe you've found a security issue in our product or service, we encourage you to notify us. We welcome working with you to resolve the issue promptly.↵↵* Let us know as soon as possible   upon discovery of a potential security issue, and we'll make every effort to quickly resolve the issue.↵* Provide us a reasonable amount of time to resolve the issue before any disclosure to the public or a third-party.↵* Make a good faith effort to avoid privacy violations, destruction of data, and interruption or degradation of our service. Only interact with accounts you own or with explicit permission of the account holder.↵↵↵↵↵# Exclusions↵While researching, we'd like to ask you to refrain from:↵* Denial of service↵* Spamming↵* Social engineering (including phishing) of N/A staff or contractors↵* Any physical attempts against N/A property or data centers↵↵Thank you for helping keep N/A and our users safe!↵↵## Code block↵\`\`\`js↵var React = require('react');↵var Markdown = require('');↵↵React.render(↵  <Markdown source="# " />,↵  document.getElementById('content')↵);↵\`\`\`↵↵## Table↵↵| min/Max | Critical (CVSS 9.0 - 10.0) | High (CVSS 7.0 - 8.9) | Medium (CVSS 4.0 - 6.9) | Low (CVSS 0.0 - 3.9) |↵| ------- | -------------------------- | --------------------- | ----------------------- |--------------------- |↵| Minimum |10 ETH                      |5 ETH                  |2 ETH                    |0.1 ETH               |↵| Maximum |15 ETH                      |8 ETH                  |5 ETH                    |2 ETH                 |↵↵↵↵this is a link to [google][]↵↵[google]: http://www.google.com↵↵↵`,
+                CVSSData: {
+                    base: {score: '6.8', severity: 'medium'},
+                    environmental: {score: '6.8', severity: 'medium'},
+                    error: {error: false},
+                    metrics: 'tostring',
+                    readyState: true,
+                    temporal: {score: '6.8', severity: 'medium'}
+                }
+            }
+            const transaction = {
+                from: walletAddress,
+                gas: 4000000
+            }
+            // @DEV (submit Vulnerability) add data to ipfs and push cve score and ipfs hash to blockchain
+            ipfs.addJSON(vulnData, (err, result) => {
+                ipfs.base58ToHex(result).then((result) => {
+                    ipfsHashToast(result)
+                    const bountycontract = new web3.eth.Contract(bountyabi, bountyAddress)
+                    bountycontract.methods.submitVuln(vulnData.CVSSData.environmental.score.hexEncode(), result).send(transaction)
+                        .on('transactionHash', function (hash) {
+                            console.log(hash)
+                        })
+                        .on('receipt', function (receipt) {
+                            console.log(receipt)
+                        })
+                })
+            })
+            resolve(true)
         })
     }
 }
