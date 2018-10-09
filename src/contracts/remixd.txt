@@ -1,1 +1,0 @@
-~/.npm-global/bin$ ./remixd -s /home/nonya/web/reactweb3/src/contracts/
