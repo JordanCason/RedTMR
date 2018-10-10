@@ -14,8 +14,17 @@ class SubNav extends Component {
         const { bountysList, bountysLoaded } = this.props.bountysList
         const { bountyCurrent } = this.props.bountyCurrent
         const bountyAddress = this.props.match.params.id // @dev navigation address pram from react router
-        if (bountysLoaded && bountyCurrent.address !== bountyAddress) { // @dev If the list of bountys has loaded and the curent bounty informatoin loaded\
-            // @dev does not equal the navigation address pram then load the new bounty information
+        if (!bountysLoaded) {
+            this.props.bountysListAction().then(() => { // if the page is reloaded this call to bountysListAction is a race with the same call from app.js \
+                // they will both get called so this function runs twice ## FIX ##
+                if (bountysLoaded && bountyCurrent.address !== bountyAddress) { // @dev If the list of bountys has loaded and the curent bounty informatoin loaded\
+                    // @dev does not equal the navigation address pram then load the new bounty information
+                    this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
+                }
+            })
+        } else if (!bountyCurrent) {
+            this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
+        } else if (bountysLoaded && bountyCurrent.address !== bountyAddress) {
             this.props.bountyCurrentAction(bountyAddress, bountysList[bountyAddress], this.props.ethereumWallet.walletAddress)
         }
     }

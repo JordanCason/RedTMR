@@ -13,10 +13,10 @@ export function bountyCurrentAction(bountyAddress, bountyInfo, wallet) {
         type: CURRENT_BOUNTY,
         payload: new Promise((resolve, reject) => {
             bountyInfo.address = bountyAddress
+            console.log(bountyInfo)
             web3.eth.getBalance(bountyAddress).then(balance => {
                 balance = web3.utils.fromWei(balance, 'ether')
                 bountyInfo.balance = balance
-                console.log('here')
                 store.dispatch(checkOwnerAction(bountyInfo.owner, wallet)).then(result => {
                     if (!result.action.payload) {
                         store.dispatch(checkBountyStateHackerAction(wallet, bountyAddress))

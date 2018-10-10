@@ -1,8 +1,9 @@
-Use MetaMask and import accounts form this testing seed
-disagree mother female maximum river often olive zebra control shield normal second
+Use MetaMask and import accounts form this seed
 
-all accounts used in the Demo are derived from that seed.
-To access more accounts open MetaMask and click in the top left corner and
+seed: disagree mother female maximum river often olive zebra control shield normal second
+
+All addresses used in the Demo are derived from that seed.
+To access more addresses open MetaMask and click in the top left corner and
 then click create account.
 
 Demo can be found here:

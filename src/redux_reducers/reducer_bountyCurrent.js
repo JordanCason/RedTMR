@@ -22,7 +22,8 @@ export function bountyCurrentReducer(state = initialState, action) {
     case CURRENT_BOUNTY_PENDING:
         return {
             ...state,
-            promisePending: true // dont think this is neaded anymore or should find a better way to manage
+            promisePending: true, // dont think this is neaded anymore or should find a better way to manage
+            bountyCurrent: payload
         }
     case CURRENT_BOUNTY_FULFILLED:
         return {
